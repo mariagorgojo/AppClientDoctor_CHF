@@ -11,7 +11,8 @@ package Main;
  */
 
 import java.util.Scanner;
-
+import Utilities.Utilities; 
+import pojos.Doctor;
 
 public class DoctorMenu {
 
@@ -22,7 +23,30 @@ public class DoctorMenu {
     }
 
      private static void RegisterMenu() {
-         
+            System.out.println("Please, input the doctor's data:");
+            String dni = "";
+            do {
+                    System.out.println("dni:");
+                    dni = Utilities.readString();
+            } while (!Utilities.validateDni(dni));
+            System.out.println("Name:");
+            String name = Utilities.readString();
+            System.out.println("Surname:");
+            String surname = Utilities.readString();
+            Integer telephone; 
+            System.out.println("Telephone: ");
+            telephone = Utilities.readInteger();
+            String email = "";
+            do {
+                    System.out.println("Email: ");
+                    email = Utilities.readString();
+            } while (!Utilities.ValidateEmail(email));	
+            String username = dni;
+            System.out.println("Password:");
+            String password = Utilities.readString();
+            System.out.println("Your username is: " + dni + "\n");
+            Doctor doctor = new Doctor(dni, name, surname, telephone, email);
+            //MANDARSELO AL SERVER Y EL SERVER LO INSERTA EN LA BASE DE DATOS 
          
      }
     

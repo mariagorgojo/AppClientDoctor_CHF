@@ -8,7 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class InputOutput {
+public class Utilities {
     
     private static BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
     
