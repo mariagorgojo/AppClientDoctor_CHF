@@ -109,8 +109,7 @@ public class Doctor {
     @Override
     public String toString() {
         return "Doctor{" + "dni=" + dni + ", name=" + name + ", surname=" + 
-                surname + ", telephone=" + telephone + ", email=" + email + 
-                ", patients=" + patients + '}';
+                surname + ", telephone=" + telephone + ", email=" + email + '}';
     }
   
     
