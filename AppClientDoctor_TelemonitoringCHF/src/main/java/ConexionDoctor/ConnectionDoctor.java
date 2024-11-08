@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author martaguzman
  */
-public class ConexionDoctor {
+public class ConnectionDoctor {
    
     public static void main(String[] args) throws IOException {
         
@@ -51,7 +51,7 @@ public class ConexionDoctor {
         try {
             socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(ConexionDoctor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
