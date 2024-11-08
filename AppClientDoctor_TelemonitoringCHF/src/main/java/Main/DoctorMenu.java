@@ -18,10 +18,15 @@ public class DoctorMenu {
     private static Scanner scanner = new Scanner(System.in); // ns si es correcto??
 
     public static void main(String[] args) { // check entrada y salida
-        showMainMenu();
+        LoginMenu();
     }
 
-    private static void showMainMenu() {
+     private static void RegisterMenu() {
+         
+         
+     }
+    
+    private static void LoginMenu() {
         while (true) {
             System.out.println("=== Doctor Menu ===");
             System.out.println("1. View My Data");
