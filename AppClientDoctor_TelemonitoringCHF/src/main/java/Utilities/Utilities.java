@@ -21,7 +21,7 @@ public class Utilities {
 	            	num = Integer.parseInt(r.readLine());
 	                if (num < 0) {
 	                    ok = false;
-	                    System.out.print("You didn't type a valid number!");
+	                    System.out.print("You didn't type a valid number.");
 	                } else {
 	                    ok = true;
 	                }
@@ -54,6 +54,56 @@ public class Utilities {
 
 	        return text;
 	    }
+                
+                
+                
+                // Validates the format of the DNI
+                
+                 public static boolean validateDNI(String id) {	
+			 
+			 boolean ok=true;
+                         
+			 if (id.length() != 9) {
+				 System.out.println("Invalid DNI, try again");
+				 ok=false;
+			 
+		            return ok;
+		        }
+
+		        for (int i = 0; i < 8; i++) {
+		            if (!Character.isDigit(id.charAt(i))) {
+		            	ok=false;
+		            	System.out.println("Invalid DNI, try again");
+		                return ok;
+		            }
+		        }
+		            String num = id.substring(0, 8);
+
+		        String validLeters = "TRWAGMYFPDXBNJZSQVHLCKE";
+		        int indexLeter = Integer.parseInt(num) % 23;
+		        char valid = validLeters.charAt(indexLeter);
+		        
+		        if (id.toUpperCase().charAt(8) != valid ) {
+		        	System.out.println("Invalid DNI, try again");
+		        	ok=false;
+		            return ok;
+		        }
+		       
+		        
+		        return ok;
+		    }
+                 
+                 public static boolean validateEmail(String email) {
+                    
+                    String emailpattern = "^[A-Za-z0-9+_.-]+@(.+)$";
+
+                    // Check if the email matches the pattern
+                    return email != null && email.matches(emailpattern);
+                }
+
+                 
+                 
+               
     
     
 }
