@@ -22,17 +22,15 @@ public class ConnectionDoctor {
     private static PrintWriter printWriter;
     private static BufferedReader bufferedReader;
 
-    // Método para establecer la conexión al servidor
     private static void connectToServer() throws IOException {
         if (socket == null || socket.isClosed()) {
             System.out.println("Connecting to server...");
-            socket = new Socket("localhost", 9001); // LOCALHOST Y PORT CAMBIAR MÁS ADELANTE
+            socket = new Socket("localhost", 9001);
             printWriter = new PrintWriter(socket.getOutputStream(), true);
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
     }
 
-    // Método para cerrar la conexión al servidor
     private static void closeConnection() {
         try {
             if (printWriter != null) {
@@ -49,52 +47,37 @@ public class ConnectionDoctor {
         }
     }
 
-    // Método para registrar un doctor en el servidor
     public static void sendRegisterServer(Doctor doctor, String password) {
         try {
-            connectToServer(); // Establecemos la conexión
-
-            // Sending doctor data to the server
-            System.out.println("Sending doctor registration information...");
-            printWriter.println("REGISTER"); 
+            connectToServer();
+            printWriter.println("REGISTER_DOCTOR");
             printWriter.println(doctor.getDni());
-            printWriter.println(password);  // Send the password securely in real application
+            printWriter.println(password);
             printWriter.println(doctor.getName());
             printWriter.println(doctor.getSurname());
             printWriter.println(doctor.getTelephone().toString());
             printWriter.println(doctor.getEmail());
-
-            // Send "STOP" to indicate the end of data
             printWriter.println("STOP");
+
+            String response = bufferedReader.readLine();
+            System.out.println("Server response: " + response);
 
         } catch (IOException e) {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
         } finally {
-            closeConnection(); // Cerramos la conexión
+            closeConnection();
         }
     }
 
-    // Método para validar el login del doctor
     public static boolean validateLogin(String dni, String password) {
         try {
-            connectToServer(); // Establecemos la conexión
-
-            // Enviamos las credenciales para validación
-            System.out.println("Sending login information...");
-            
-            printWriter.println("LOGIN");
+            connectToServer();
+            printWriter.println("LOGIN_DOCTOR");
             printWriter.println(dni);
             printWriter.println(password);
             printWriter.println("STOP");
 
-
-            // Esperamos la respuesta del servidor
             String serverResponse = bufferedReader.readLine();
-
-            // Si el servidor responde con "VALID", las credenciales son correctas 
-            // IMPORTANTE CHECKEAR, Y EN ESTE ORDEN:
-            //1. VALIDAR si el DNI corresponde con el de un doctor 
-            //2.VALIDAR SI DNI de DOCTOR corresponde con la password
             if ("VALID".equals(serverResponse)) {
                 System.out.println("Login successful!");
                 return true;
@@ -107,10 +90,11 @@ public class ConnectionDoctor {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
         } finally {
-            closeConnection(); // Cerramos la conexión
+            closeConnection();
         }
     }
 }
+
 
 
    

@@ -1,4 +1,4 @@
-package Main;
+package Executable;
 
 import java.util.Scanner;
 import Utilities.Utilities; 
@@ -42,8 +42,13 @@ public class DoctorMenu {
     }
 
     private static void loginMenu() {
-        System.out.print("Enter DNI: ");
-        String dni = scanner.nextLine();
+         String dni;
+        do {
+            System.out.print("DNI: ");
+            dni = scanner.nextLine();
+        } while (!Utilities.validateDNI(dni)); // enter a correct format
+
+        
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
