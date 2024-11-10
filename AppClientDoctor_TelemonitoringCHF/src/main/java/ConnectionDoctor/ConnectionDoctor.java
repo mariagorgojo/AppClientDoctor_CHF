@@ -47,7 +47,7 @@ public class ConnectionDoctor {
         }
     }
 
-    public static void sendRegisterServer(Doctor doctor, String password) {
+    public static boolean sendRegisterServer(Doctor doctor, String password) {
         try {
             connectToServer();
             printWriter.println("REGISTER_DOCTOR");
@@ -59,15 +59,20 @@ public class ConnectionDoctor {
             printWriter.println(doctor.getEmail());
             printWriter.println("STOP");
 
-            String response = bufferedReader.readLine();
-            System.out.println("Server response: " + response);
-
+            String serverResponse = bufferedReader.readLine();
+            if ("VALID".equals(serverResponse)) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (IOException e) {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
+            return false;
         } finally {
             closeConnection();
         }
     }
+
 
     public static boolean validateLogin(String dni, String password) {
         try {
