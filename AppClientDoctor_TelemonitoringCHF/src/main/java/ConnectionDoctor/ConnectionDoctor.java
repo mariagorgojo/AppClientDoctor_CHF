@@ -57,7 +57,6 @@ public class ConnectionDoctor {
             printWriter.println(doctor.getSurname());
             printWriter.println(doctor.getTelephone().toString());
             printWriter.println(doctor.getEmail());
-            printWriter.println("STOP");
 
             String serverResponse = bufferedReader.readLine();
             if ("VALID".equals(serverResponse)) {
@@ -69,6 +68,7 @@ public class ConnectionDoctor {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
         } finally {
+            printWriter.println("STOP");
             closeConnection();
         }
     }
@@ -80,7 +80,7 @@ public class ConnectionDoctor {
             printWriter.println("LOGIN_DOCTOR");
             printWriter.println(dni);
             printWriter.println(password);
-            printWriter.println("STOP");
+            
 
             String serverResponse = bufferedReader.readLine();
             if ("VALID".equals(serverResponse)) {
@@ -95,6 +95,7 @@ public class ConnectionDoctor {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
         } finally {
+            printWriter.println("STOP");
             closeConnection();
         }
     }
