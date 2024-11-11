@@ -18,8 +18,8 @@ public class DoctorMenu {
         while (true) {
             
             System.out.println("Please select an option to get started:");
-            System.out.println("1. Log in");
-            System.out.println("2. Register");
+            System.out.println("1. Register");
+            System.out.println("2. Log in");
             System.out.println("0. Exit");
            
             int choice = scanner.nextInt();
@@ -27,10 +27,10 @@ public class DoctorMenu {
 
             switch (choice) {
                 case 1:
-                    loginMenu(); 
+                    registerDoctor();
                     break;
                 case 2:
-                    registerDoctor();
+                    loginMenu();
                     break;
                 case 0:
                     System.out.println("Exiting...");
@@ -42,23 +42,34 @@ public class DoctorMenu {
     }
 
     private static void loginMenu() {
-         String dni;
-        do {
-            System.out.print("DNI: ");
+    String dni;
+    String password;
+    boolean loginSuccess = false;
+
+    do {
+        System.out.print("Enter DNI: ");
+        dni = scanner.nextLine();
+
+        while (!Utilities.validateDNI(dni)) { // Valida el formato del DNI
+            System.out.println("Invalid DNI format. Please try again.");
+            System.out.print("Enter DNI: ");
             dni = scanner.nextLine();
-        } while (!Utilities.validateDNI(dni)); // enter a correct format
-
-        
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
-
-        // Validate credentials (assuming there's a Utilities.validateLogin method)
-        if (ConnectionDoctor.validateLogin(dni, password)) { // VOLVER Y PENSAR -> SERVER
-            doctorMenu(dni);
-        } else {
-            System.out.println("Something when wrong. Make sure to introduce your DNI and password as a Doctor.");
         }
-    }
+
+        System.out.print("Enter password: ");
+        password = scanner.nextLine();
+        
+        // IMPORANTE: VALID SI ESTÁ REGISTRADO, SI EL DNI ES DE DOCTOR Y SI COINCIDE LA PASSWORD CON DNI!!
+        if (ConnectionDoctor.validateLogin(dni, password)) { 
+            System.out.println("Doctor login successful!");
+            doctorMenu(dni);
+            loginSuccess = true; // Sale del bucle
+        } else {
+            System.out.println("Something went wrong. Make sure to introduce your DNI and password as a Doctor.");
+        }
+
+    } while (!loginSuccess); // Repite hasta que el login sea exitoso
+}
 
     private static void registerDoctor() {
         System.out.println("Enter doctor details to register:");
@@ -67,7 +78,7 @@ public class DoctorMenu {
         do {
             System.out.print("DNI: ");
             dni = scanner.nextLine();
-        } while (!Utilities.validateDNI(dni)); //VERIFICAR SI EXISTE EN LA BASE D DTS UN VEZ Q SE VALIDE EL FORMATO
+        } while (!Utilities.validateDNI(dni)); // verifico formato 
 
         System.out.print("Password: ");
         String password = scanner.nextLine();
@@ -89,10 +100,15 @@ public class DoctorMenu {
         
     
         Doctor doctor = new Doctor(dni, name, surname, telephone, email);
-        System.out.println("User registered with DNI: " + dni); // TAL vez esto poner cd verifique q se ha guardado en la bses d dts
-
-       // Mandamos info al server
-        ConnectionDoctor.sendRegisterServer(doctor, password);
+        
+         if ( ConnectionDoctor.sendRegisterServer(doctor, password)) { 
+            System.out.println("User registered successfully with DNI: " + dni);
+            mainMenu();
+        } else {
+            System.out.println("DNI : " + dni + " is already registered. Try to login to access your account.");  
+            mainMenu(); // redirigir
+         }
+         
     }
 
     private static void doctorMenu(String doctorDni ) { // VOLVER
@@ -124,7 +140,9 @@ public class DoctorMenu {
 
     private static void getDoctorById(String dni) { // VOLVER ??
         System.out.println("Displaying doctor details...");
-        // Implementation to retrieve and display doctor details by DNI
+          // VOLVER -> DO. 
+       //HABRIA Q BUSCARLO EN LA BASE D DTS XQ LUEGO EN LOS THREADS VAMOS A TENER VARIOS PACIENTES 
+      // O SINO toString() +VARAIBLE GLOBAL 
     }
 
     private static void viewPatientsMenu() {
@@ -139,11 +157,11 @@ public class DoctorMenu {
 
             switch (choice) {
                 case 1:
-                    // do -> metodo q imprima la lista d patients -OJO- lista de pacientes asociados a ese doctor para q pueda elegir
+                    // DO -> metodo q imprima la lista d patients -OJO- lista de pacientes asociados a ese doctor para q pueda elegir
                     selectPatientById(); 
                     break;
                 case 0:
-                    return; // seria return o poner: doctorMenu ()?? PROBAR
+                    return; 
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
@@ -216,7 +234,7 @@ public class DoctorMenu {
             System.out.print("Choose an option: ");
             
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
