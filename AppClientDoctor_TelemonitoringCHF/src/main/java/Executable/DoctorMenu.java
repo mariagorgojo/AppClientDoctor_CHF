@@ -59,7 +59,7 @@ public class DoctorMenu {
         System.out.print("Enter password: ");
         password = scanner.nextLine();
         
-        // IMPORTANTE: VALID SI ESTÁ REGISTRADO, SI EL DNI ES DE DOCTOR Y SI COINCIDE LA PASSWORD CON DNI!!
+        // TODO: IMPORTANTE: VALID SI ESTÁ REGISTRADO, SI EL DNI ES DE DOCTOR Y SI COINCIDE LA PASSWORD CON DNI!!
         if (ConnectionDoctor.validateLogin(dni, password)) { 
             System.out.println("Doctor login successful!");
             loginSuccess = true; 
