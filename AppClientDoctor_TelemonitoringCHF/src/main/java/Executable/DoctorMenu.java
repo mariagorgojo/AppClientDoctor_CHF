@@ -13,107 +13,129 @@ public class DoctorMenu {
         mainMenu();
     }
 
-    private static void mainMenu() {
-        System.out.println("-- Welcome to the Doctor App --");
-        while (true) {
-            
-            System.out.println("Please select an option to get started:");
-            System.out.println("1. Register");
-            System.out.println("2. Log in");
-            System.out.println("0. Exit");
-           
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+   private static void mainMenu() {
+    System.out.println("\n-- Welcome to the Doctor App --");
 
-            switch (choice) {
-                case 1:
-                    registerDoctor();
-                    break;
-                case 2:
-                    loginMenu();
-                    break;
-                case 0:
-                    System.out.println("Exiting...");
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-            }
+    while (true) {
+        System.out.println("1. Register");
+        System.out.println("2. Log in");
+        System.out.println("0. Exit");
+        System.out.println("\nPlease select an option to get started: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine(); 
+        switch (choice) {
+            case 1:
+                registerDoctor();
+                break;
+            case 2:
+                loginMenu();
+                break;
+            case 0:
+                System.out.println("Exiting...");
+                return;
+            default:
+                System.out.println("Invalid option. Please try again.");
         }
     }
-
-    private static void loginMenu() {
-    String dni;
-    String password;
-    boolean loginSuccess = false;
-
-    do {
-        System.out.print("Enter DNI: ");
-        dni = scanner.nextLine();
-
-        while (!Utilities.validateDNI(dni)) { // Valida el formato del DNI
-            System.out.println("Invalid DNI format. Please try again.");
-            System.out.print("Enter DNI: ");
-            dni = scanner.nextLine();
-        }
-
-        System.out.print("Enter password: ");
-        password = scanner.nextLine();
-        
-        // TODO: IMPORTANTE: VALID SI ESTÁ REGISTRADO, SI EL DNI ES DE DOCTOR Y SI COINCIDE LA PASSWORD CON DNI!!
-        if (ConnectionDoctor.validateLogin(dni, password)) { 
-            System.out.println("Doctor login successful!");
-            loginSuccess = true; 
-            doctorMenu(dni);
-        } else {
-            System.out.println("Something went wrong. Make sure to introduce your DNI and password as a Doctor.");
-        }
-
-    } while (!loginSuccess); // Repite hasta que el login sea exitoso
 }
 
+
+   private static void loginMenu() {
+    String dni;
+    String password;
+   // boolean loginSuccess = false;
+
+    //do {
+        // Solicita el DNI y valida el formato
+        do {
+            System.out.println("\nEnter DNI: ");
+            dni = scanner.nextLine();
+            if (!Utilities.validateDNI(dni)) {
+                System.out.println("Invalid DNI. Please try again.");
+            }
+        } while (!Utilities.validateDNI(dni)); // Repite hasta que el formato sea correcto
+
+        // Solicita la contraseña
+        System.out.println("Enter password: ");
+        password = scanner.nextLine();
+    
+        try {
+            // Valida login
+            if (ConnectionDoctor.validateLogin(dni, password)) { 
+                System.out.println("\nDoctor login successful!");
+               // loginSuccess = true; 
+                doctorMenu(dni); // Redirige al menú del doctor
+            } 
+            
+        } catch (Exception e) {
+            System.out.println("ERROR. Make sure you entered your DNI and password correctly.");
+            System.out.println("If you're not registered, please do it first. \n");
+            //loginSuccess = true; 
+            mainMenu();
+            //System.out.println(e);
+
+        }
+    } //while (!loginSuccess); // Repite hasta que el login sea exitoso
+//}
+
+
     private static void registerDoctor() {
-        System.out.println("Enter doctor details to register:");
+        System.out.println("\nEnter doctor details to register:");
 
         String dni;
         do {
-            System.out.print("DNI: ");
+            System.out.println("\nEnter DNI: ");
             dni = scanner.nextLine();
-        } while (!Utilities.validateDNI(dni)); // verifico formato 
+            if (!Utilities.validateDNI(dni)) {
+                System.out.println("Invalid DNI format. Please try again.");
+            }
+        } while (!Utilities.validateDNI(dni));
 
-        System.out.print("Password: ");
+        System.out.println("Create password: ");
         String password = scanner.nextLine();
 
-        System.out.print("First name: ");
+        System.out.println("First name: ");
         String name = scanner.nextLine();
-        System.out.print("Last name: ");
+        
+        System.out.println("Last name: ");
         String surname = scanner.nextLine();
         
-        System.out.print("Phone: ");
+        System.out.println("Phone: ");
         Integer telephone = scanner.nextInt();
         scanner.nextLine();
         
         String email;
         do {
-            System.out.print("Email: ");
+            System.out.println("Email: ");
             email = scanner.nextLine();
+             if (!Utilities.validateEmail(email)) {
+                System.out.println("Invalid email. Please try again.");
+            }
         } while (!Utilities.validateEmail(email));
         
     
         Doctor doctor = new Doctor(dni, name, surname, telephone, email);
         
+        try{
          if ( ConnectionDoctor.sendRegisterServer(doctor, password)) { 
             System.out.println("User registered successfully with DNI: " + dni);
             mainMenu();
         } else {
             System.out.println("DNI : " + dni + " is already registered. Try to login to access your account.");  
             mainMenu(); // redirigir
-         }
-         
+             }
+        }catch (Exception e) {
+            System.out.println("An unexpected error occurred.");
+            mainMenu();
+            //System.out.println(e);
+        }
+
     }
 
     private static void doctorMenu(String doctorDni ) { // VOLVER
         while (true) {
-            System.out.println("=== Doctor Menu ===");
+            System.out.println("\n=== Doctor Menu ===");
             System.out.println("1. View my details");
             System.out.println("2. View patients");
             System.out.println("0. Log out");
@@ -138,17 +160,17 @@ public class DoctorMenu {
         }
     }
 
-    private static void getDoctorById(String dni) { // VOLVER ??
-        System.out.println("Displaying doctor details...");
+    private static void getDoctorById(String dni) { // VOLVER 
+        System.out.println("\nDisplaying doctor details...");
           // VOLVER -> DO. 
        //HABRIA Q BUSCARLO EN LA BASE D DTS XQ LUEGO EN LOS THREADS VAMOS A TENER VARIOS PACIENTES 
-      // O SINO toString() +VARAIBLE GLOBAL 
+      // y luego toString() ??
     }
 
     private static void viewPatientsMenu() {
         while (true) {
-            System.out.println("=== Patient Information ===");
-            System.out.println("1. Select patient");
+            System.out.println("\n=== Patient Information ===");
+            System.out.println("1. Select patient to see info");
             System.out.println("0. Go back");
             System.out.print("Choose an option: ");
             
@@ -157,7 +179,7 @@ public class DoctorMenu {
 
             switch (choice) {
                 case 1:
-                    // DO -> metodo q imprima la lista d patients -OJO- lista de pacientes asociados a ese doctor para q pueda elegir
+                  
                     selectPatientById(); 
                     break;
                 case 0:
@@ -168,16 +190,18 @@ public class DoctorMenu {
         }
     }
 
-    private static void selectPatientById() {
-        System.out.print("Please select the number corresponding to the patient you wish to view from the list:"); 
+    private static void selectPatientById() { // VOLVER creo q hay q cambiar --> chat 
+        System.out.print("\nPlease select the number corresponding to the patient you wish to view from the list:"); 
+         // DO -> metodo q imprima la lista d patients -OJO- lista de pacientes asociados a ese doctor para q pueda elegir
+         // para ello: hacer una metodo q imprima paciente de ese doctor accediendo: ArrayList<Patient> patients d ese doctor.
         // deria de checkear la length de la lista de patients para poner excepcion si introduce un nº q no está en la lista de patients
         int patientId = scanner.nextInt(); 
         scanner.nextLine(); 
 
-        System.out.println("Displaying patient information...");
+       // System.out.println("\nDisplaying patient information...");
 
         while (true) {
-            System.out.println("=== Patient Episodes ===");
+            System.out.println("\n=== Patient Episodes ===");
             System.out.println("1. View patient episodes");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
@@ -199,10 +223,10 @@ public class DoctorMenu {
     }
 
     private static void viewEpisodesByPatient() {
-        System.out.println("Displaying patient's episodes...");
+        System.out.println("\nDisplaying patient's episodes...");
 
         while (true) {
-            System.out.println("=== Episodes ===");
+            System.out.println("\n=== Episodes ===");
             System.out.println("1. Select an episode");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
@@ -228,7 +252,7 @@ public class DoctorMenu {
         System.out.println("Print: surgeries, diseases, symptoms..."); // DO
 
         while (true) {
-            System.out.println("=== Recordings Menu ===");
+            System.out.println("\n=== Recordings Menu ===");
             System.out.println("1. View recordings");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
@@ -249,10 +273,10 @@ public class DoctorMenu {
     }
 
     private static void viewRecordingsByEpisode() {
-        System.out.println("Displaying episode recordings...");
+        System.out.println("\nDisplaying episode recordings...");
 
         while (true) {
-            System.out.println("=== Select Recording Type ===");
+            System.out.println("\n=== Select Recording Type ===");
             System.out.println("1. Select recording");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
@@ -273,7 +297,7 @@ public class DoctorMenu {
     }
 
     private static void getRecordingByType() { // VOLVER
-        System.out.println("Displaying selected recording...");
+        System.out.println("\nDisplaying selected recording...");
         // Implementation to display recording by type
     }
 }

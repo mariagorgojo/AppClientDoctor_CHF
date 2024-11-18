@@ -64,7 +64,7 @@ public class Utilities {
 			 boolean ok=true;
                          
 			 if (id.length() != 9) {
-				 System.out.println("Invalid DNI, try again");
+				// System.out.println("Invalid DNI, try again");
 				 ok=false;
 			 
 		            return ok;
@@ -73,7 +73,7 @@ public class Utilities {
 		        for (int i = 0; i < 8; i++) {
 		            if (!Character.isDigit(id.charAt(i))) {
 		            	ok=false;
-		            	System.out.println("Invalid DNI, try again");
+		            	//System.out.println("Invalid DNI, try again");
 		                return ok;
 		            }
 		        }
@@ -84,7 +84,7 @@ public class Utilities {
 		        char valid = validLeters.charAt(indexLeter);
 		        
 		        if (id.toUpperCase().charAt(8) != valid ) {
-		        	System.out.println("Invalid DNI, try again");
+		        	//System.out.println("Invalid DNI, try again");
 		        	ok=false;
 		            return ok;
 		        }

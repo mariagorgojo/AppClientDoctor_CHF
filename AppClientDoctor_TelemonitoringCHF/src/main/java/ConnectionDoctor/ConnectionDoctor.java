@@ -25,7 +25,7 @@ public class ConnectionDoctor {
     private static void connectToServer() throws IOException {
         if (socket == null || socket.isClosed()) {
             System.out.println("Connecting to server...");
-            socket = new Socket("localhost", 9001);
+            socket = new Socket("localhost", 9001); // cambiar mas adelante 
             printWriter = new PrintWriter(socket.getOutputStream(), true);
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
@@ -68,8 +68,8 @@ public class ConnectionDoctor {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
         } finally {
-            printWriter.println("STOP");
-            closeConnection();
+           // printWriter.println("STOP");
+            closeConnection(); // correct?
         }
     }
 
