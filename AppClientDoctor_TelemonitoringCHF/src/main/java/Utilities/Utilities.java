@@ -7,6 +7,7 @@ package Utilities;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class Utilities {
     
@@ -100,10 +101,46 @@ public class Utilities {
                     // Check if the email matches the pattern
                     return email != null && email.matches(emailpattern);
                 }
+                 
+                 // Method to display a menu and return the selected option
+    public static int displayMenu(String title, String[] options) {
+        System.out.println(title);
+        for (int i = 0; i < options.length; i++) {
+            System.out.printf("%d. %s\n", i + 1, options[i]);
+        }
+        System.out.print("Choose an option: ");
+        return getValidInput(0, options.length - 1);
+    }
 
-                 
-                 
-               
+    // Method to display a list of objects with a menu
+    public static <T> int displayListWithMenu(List<T> list, String title, String backOption) {
+        System.out.println("\n" + title);
+        for (int i = 0; i < list.size(); i++) {
+            System.out.printf("%d. %s\n", i + 1, list.get(i).toString());
+        }
+        System.out.println("0. " + backOption);
+        System.out.print("Choose an option: ");
+        return getValidInput(0, list.size());
+    }
+
+    // Method to validate input within a range
+    public static int getValidInput(int min, int max) {
+        while (true) {
+            try {
+                String input = r.readLine(); // Read input as a string
+                int choice = Integer.parseInt(input); // Convert to integer
+                if (choice >= min && choice <= max) {
+                    return choice;
+                }
+            } catch (IOException | NumberFormatException e) {
+                // Ignore and prompt again
+            }
+            System.out.print("Invalid input. Please try again: ");
+        }
+
+    
+    }
+}         
     
     
-}
+

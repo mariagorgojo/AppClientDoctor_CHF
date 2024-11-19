@@ -98,7 +98,7 @@ public class Episode {
         this.diseases = diseases;
     }
 
-    public ArrayList<Recording> getRecording() {
+    public ArrayList<Recording> getRecordings() {
         return recordings;
     }
 

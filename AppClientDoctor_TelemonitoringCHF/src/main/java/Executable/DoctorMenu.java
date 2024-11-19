@@ -4,6 +4,8 @@ import java.util.Scanner;
 import Utilities.Utilities; 
 import pojos.Doctor;
 import ConnectionDoctor.*;
+import java.util.List;
+import pojos.*;
 
 public class DoctorMenu {
 
@@ -133,23 +135,17 @@ public class DoctorMenu {
 
     }
 
-    private static void doctorMenu(String doctorDni ) { // VOLVER
+   private static void doctorMenu(String doctorDni) {
         while (true) {
-            System.out.println("\n=== Doctor Menu ===");
-            System.out.println("1. View my details");
-            System.out.println("2. View patients");
-            System.out.println("0. Log out");
-            System.out.print("Choose an option: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
+            int choice = Utilities.displayMenu("\n=== Doctor Menu ===",
+                    new String[]{"View my details", "View patients", "Log out"});
 
             switch (choice) {
-                case 1:
-                    getDoctorById(doctorDni); // toString or mandarDNI para devolver la info del doctor no???
+                case 1: // VOLVER --> metodo de ConnectionDoctor es correcto? 
+                    ConnectionDoctor.getDoctorById(doctorDni); // pensar + base d dts
                     break;
                 case 2:
-                    viewPatientsMenu();
+                    viewPatientsMenu(doctorDni);
                     break;
                 case 0:
                     System.out.println("Logging out...");
@@ -160,144 +156,64 @@ public class DoctorMenu {
         }
     }
 
-    private static void getDoctorById(String dni) { // VOLVER 
-        System.out.println("\nDisplaying doctor details...");
-          // VOLVER -> DO. 
-       //HABRIA Q BUSCARLO EN LA BASE D DTS XQ LUEGO EN LOS THREADS VAMOS A TENER VARIOS PACIENTES 
-      // y luego toString() ??
-    }
+    private static void viewPatientsMenu(String doctorDni) { // VOLVER
+        List<Patient> patients = ConnectionDoctor.getPatientsByDoctor(doctorDni);
 
-    private static void viewPatientsMenu() {
+        if (patients.isEmpty()) {
+            System.out.println("\nNo patients found.");
+            return;
+        }
+
         while (true) {
-            System.out.println("\n=== Patient Information ===");
-            System.out.println("1. Select patient to see info");
-            System.out.println("0. Go back");
-            System.out.print("Choose an option: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
+            int choice = Utilities.displayListWithMenu(patients, "=== Patients ===", "Go back");
 
-            switch (choice) {
-                case 1:
-                  
-                    selectPatientById(); 
-                    break;
-                case 0:
-                    return; 
-                default:
-                    System.out.println("Invalid option. Please try again.");
+            if (choice == 0) {
+                return;
+            } else {
+                Patient selectedPatient = patients.get(choice - 1);
+                viewEpisodesByPatient(selectedPatient);
             }
         }
     }
 
-    private static void selectPatientById() { // VOLVER creo q hay q cambiar --> chat 
-        System.out.print("\nPlease select the number corresponding to the patient you wish to view from the list:"); 
-         // DO -> metodo q imprima la lista d patients -OJO- lista de pacientes asociados a ese doctor para q pueda elegir
-         // para ello: hacer una metodo q imprima paciente de ese doctor accediendo: ArrayList<Patient> patients d ese doctor.
-        // deria de checkear la length de la lista de patients para poner excepcion si introduce un nº q no está en la lista de patients
-        int patientId = scanner.nextInt(); 
-        scanner.nextLine(); 
+    private static void viewEpisodesByPatient(Patient patient) {
+        List<Episode> episodes = patient.getEpisodes();
 
-       // System.out.println("\nDisplaying patient information...");
+        if (episodes.isEmpty()) {
+            System.out.println("\nNo episodes found for this patient.");
+            return;
+        }
 
         while (true) {
-            System.out.println("\n=== Patient Episodes ===");
-            System.out.println("1. View patient episodes");
-            System.out.println("0. Exit");
-            System.out.print("Choose an option: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = Utilities.displayListWithMenu(episodes,
+                    "=== Episodes for " + patient.getName() + " ===", "Go back");
 
-            switch (choice) {
-                case 1:
-                    
-                    viewEpisodesByPatient();
-                    break;
-                case 0:
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+            if (choice == 0) {
+                return;
+            } else {
+                Episode selectedEpisode = episodes.get(choice - 1);
+                viewRecordingsByEpisode(selectedEpisode);
             }
         }
     }
 
-    private static void viewEpisodesByPatient() {
-        System.out.println("\nDisplaying patient's episodes...");
+    private static void viewRecordingsByEpisode(Episode episode) {
+        List<Recording> recordings = episode.getRecordings();
+
+        if (recordings.isEmpty()) {
+            System.out.println("\nNo recordings found for this episode.");
+            return;
+        }
 
         while (true) {
-            System.out.println("\n=== Episodes ===");
-            System.out.println("1. Select an episode");
-            System.out.println("0. Exit");
-            System.out.print("Choose an option: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
+            int choice = Utilities.displayListWithMenu(recordings, "=== Recordings ===", "Go back");
 
-            switch (choice) {
-                case 1:
-                      // do -> metodo q imprima la lista episodes para q pueda saber cual quiere ver??
-                    selectEpisodeById();
-                    break;
-                case 0:
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+            if (choice == 0) {
+                return;
+            } else {
+                Recording selectedRecording = recordings.get(choice - 1);
+              //  System.out.println("\nSelected recording: " + selectedRecording.getDetails()); // como se ve la señal
             }
         }
-    }
-
-    private static void selectEpisodeById() { // No entiendo muy bien como lo queria hacer Carmen x defecto le enseña surgeries, diseases, symptoms??
-        System.out.println("Displaying episode details...");
-        System.out.println("Print: surgeries, diseases, symptoms..."); // DO
-
-        while (true) {
-            System.out.println("\n=== Recordings Menu ===");
-            System.out.println("1. View recordings");
-            System.out.println("0. Exit");
-            System.out.print("Choose an option: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
-
-            switch (choice) {
-                case 1:
-                    viewRecordingsByEpisode();
-                    break;
-                case 0:
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-            }
-        }
-    }
-
-    private static void viewRecordingsByEpisode() {
-        System.out.println("\nDisplaying episode recordings...");
-
-        while (true) {
-            System.out.println("\n=== Select Recording Type ===");
-            System.out.println("1. Select recording");
-            System.out.println("0. Exit");
-            System.out.print("Choose an option: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
-
-            switch (choice) {
-                case 1:
-                    getRecordingByType();
-                    break;
-                case 0:
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-            }
-        }
-    }
-
-    private static void getRecordingByType() { // VOLVER
-        System.out.println("\nDisplaying selected recording...");
-        // Implementation to display recording by type
     }
 }

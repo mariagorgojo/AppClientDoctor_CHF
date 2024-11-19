@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pojos.Doctor;
+import pojos.Patient;
 
 /**
  *
@@ -98,6 +100,14 @@ public class ConnectionDoctor {
             printWriter.println("STOP");
             closeConnection();
         }
+    }
+
+    public static void getDoctorById(String doctorDni) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public static List<Patient> getPatientsByDoctor(String doctorDni) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
 
