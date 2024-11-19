@@ -142,7 +142,7 @@ public class DoctorMenu {
 
             switch (choice) {
                 case 1: // VOLVER --> metodo de ConnectionDoctor es correcto? 
-                    ConnectionDoctor.getDoctorById(doctorDni); // pensar + base d dts
+                    ConnectionDoctor.viewDoctorDetails(doctorDni); // pensar + base d dts --> devulve doctor + toString
                     break;
                 case 2:
                     viewPatientsMenu(doctorDni);
@@ -197,7 +197,7 @@ public class DoctorMenu {
         }
     }
 
-    private static void viewRecordingsByEpisode(Episode episode) {
+    private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
         List<Recording> recordings = episode.getRecordings();
 
         if (recordings.isEmpty()) {

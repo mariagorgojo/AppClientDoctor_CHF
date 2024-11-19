@@ -102,7 +102,7 @@ public class ConnectionDoctor {
         }
     }
 
-    public static void getDoctorById(String doctorDni) {
+    public static void viewDoctorDetails(String doctorDni) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
