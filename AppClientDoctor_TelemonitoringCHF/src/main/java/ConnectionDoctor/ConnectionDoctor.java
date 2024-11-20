@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,6 +18,7 @@ import java.util.logging.Logger;
 import pojos.Disease;
 import pojos.Doctor;
 import pojos.Patient;
+import pojos.Patient.Gender;
 import pojos.Surgery;
 import pojos.Symptom;
 
@@ -163,32 +166,100 @@ public class ConnectionDoctor {
         return patients; // Retornar la lista de pacientes
 
     }
-    public static void viewPatientInformation(String dni){
-        List<Surgery> surgeries = new ArrayList<>();
-        List<Symptom> symptoms = new ArrayList<>();
-        List<Disease> diseases = new ArrayList<>();
-        
-        try {
-                connectToServer();
-                printWriter.println("VIEW_PATIENT_INFORMATION"); 
-                printWriter.println(dni); 
 
-                String patientString;
-                while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
-                    String[] parts = patientString.split(",");
+    public static void viewPatientInformation(String dni) {
+    List<Surgery> surgeries = new ArrayList<>();
+    List<Symptom> symptoms = new ArrayList<>();
+    List<Disease> diseases = new ArrayList<>();
+    Patient patient = null;
+    
+    try {
+        connectToServer();
+        printWriter.println("VIEW_PATIENT_INFORMATION");
+        printWriter.println(dni);
 
-                    Patient patient = new Patient();
-                    patient.setDni(parts[0]);
-                    patient.setName(parts[1]);
-                    patient.setSurname(parts[2]);
-                    patients.add(patient);
+        String dataString;
+        while (!(dataString = bufferedReader.readLine()).equals("END_OF_LIST")) {
+            String[] parts = dataString.split(":");
+
+            if (parts.length == 2) {
+                String type = parts[0];
+                String data = parts[1]; // Tipo de dato: SURGERY, SYMPTOM, DISEASE
+
+                switch (type) {
+                     case "PATIENT_INFO":
+                        String[] patientParts = data.split(",");
+                        patient = new Patient();
+                        patient.setDni(patientParts[0]);
+                        patient.setName(patientParts[1]);
+                        patient.setSurname(patientParts[2]);
+                        patient.setEmail(patientParts[3]);
+                        patient.setGender(Gender.valueOf(patientParts[4].toUpperCase()));
+                        patient.setPhoneNumber(Integer.parseInt(patientParts[5])); // Convertir a entero
+                        patient.setDob(LocalDate.parse(patientParts[6], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+                        String[] doctorParts = patientParts[7].split(","); // Dividir directamente por comas
+
+                        Doctor doctor = new Doctor();
+                        doctor.setDni(doctorParts[0]);
+                        doctor.setName(doctorParts[1]);
+                        doctor.setSurname(doctorParts[2]);
+                        doctor.setTelephone(Integer.parseInt(doctorParts[3])); // Convertir teléfono a entero
+                        doctor.setEmail(doctorParts[4]);
+                        patient.setDoctor(doctor);
+                        break;
+                        
+                    case "SURGERY":
+                        Surgery surgery = new Surgery();
+                        surgery.setType(data);
+                        surgeries.add(surgery);
+                        break;
+
+                    case "SYMPTOM":
+                        Symptom symptom = new Symptom();
+                        symptom.setType(data);
+                        symptoms.add(symptom);
+                        break;
+
+                    case "DISEASE":
+                        Disease disease = new Disease();
+                        disease.setDisease(data);
+                        diseases.add(disease);
+                        break;
+
+                    default:
+                        System.out.println("Unknown data type: " + type);
+                        break;
                 }
-            } catch (IOException e) {
-                Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-            } finally {
-                closeConnection(); // Cerrar la conexión al servidor
+            } else {
+                System.out.println("Invalid data format received: " + dataString);
+            }
         }
-    } 
+
+        System.out.println("Patient Information:");
+        System.out.println(patient.toString());
+
+        System.out.println("Surgeries:");
+        for (Surgery surgery : surgeries) {
+            System.out.println("- " + surgery.getType());
+        }
+
+        System.out.println("\nSymptoms:");
+        for (Symptom symptom : symptoms) {
+            System.out.println("- " + symptom.getType());
+        }
+
+        System.out.println("\nDiseases:");
+        for (Disease disease : diseases) {
+            System.out.println("- " + disease.getDisease());
+        }
+
+    } catch (IOException e) {
+        Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
+    } finally {
+        closeConnection(); // Cerrar la conexión al servidor
+    }
+}
 }
 
 
