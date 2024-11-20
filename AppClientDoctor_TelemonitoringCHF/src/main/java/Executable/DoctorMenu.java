@@ -142,7 +142,9 @@ public class DoctorMenu {
 
             switch (choice) {
                 case 1: // VOLVER --> metodo de ConnectionDoctor es correcto? 
-                    ConnectionDoctor.viewDoctorDetails(doctorDni); // pensar + base d dts --> devulve doctor + toString
+                    
+                    Doctor doctor = ConnectionDoctor.viewDoctorDetails(doctorDni); // pensar + base d dts --> devulve doctor + toString
+                    Utilities.showDoctorDetails(doctor);
                     break;
                 case 2:
                     viewPatientsMenu(doctorDni);
@@ -183,7 +185,8 @@ private static void viewPatientsMenu(String doctorDni) {
             return;
         } else if (choice > 0 && choice <= patients.size()) {
             Patient selectedPatient = patients.get(choice - 1);
-            ConnectionDoctor.viewPatientInformation(selectedPatient.getDni()); 
+            //Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDni());
+            Utilities.showDoctorDetails(selectedPatient);
             //viewEpisodesByPatient(selectedPatient);
         } else {
             System.out.println("Invalid choice. Please try again.");

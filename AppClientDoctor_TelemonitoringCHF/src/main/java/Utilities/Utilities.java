@@ -120,7 +120,8 @@ public class Utilities {
             System.out.printf("%d. DNI: %s, Name: %s, Surname: %s%n", 
                               i + 1, patient.getDni(), patient.getName(), patient.getSurname());
     }
-}                      
+}   
+
 // Method to display a menu and return the selected option
     public static int displayMenu(String title, String[] options) {
         System.out.println(title);
