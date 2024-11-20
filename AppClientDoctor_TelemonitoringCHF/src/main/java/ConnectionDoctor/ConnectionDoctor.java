@@ -3,16 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ConnectionDoctor;
+import Utilities.Utilities;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pojos.Disease;
 import pojos.Doctor;
 import pojos.Patient;
+import pojos.Surgery;
+import pojos.Symptom;
 
 /**
  *
@@ -97,18 +102,93 @@ public class ConnectionDoctor {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
         } finally {
-            printWriter.println("STOP");
+            //printWriter.println("STOP"); // TO DO VER SI QUITARLO O NO 
             closeConnection();
         }
     }
 
     public static void viewDoctorDetails(String doctorDni) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            connectToServer();
+            printWriter.println("VIEW_DOCTOR_DETAILS");
+            printWriter.println(doctorDni); 
+            
+            String doctorString = bufferedReader.readLine(); 
+
+            String[] parts = doctorString.split(","); 
+  
+            if (parts.length == 5) {
+                Doctor doctor = new Doctor();
+                doctor.setDni(parts[0]);
+                doctor.setName(parts[1]);
+                doctor.setSurname(parts[2]);
+                doctor.setTelephone(Integer.parseInt(parts[3]));
+                doctor.setEmail(parts[4]);
+                               
+                Utilities.showDoctorDetails(doctor); 
+            } else {
+                System.out.println("Invalid data format received from server.");
+            }
+        } catch (IOException e) {
+            Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+           // printWriter.println("STOP");
+            closeConnection(); // correct?
+        }
     }
 
     public static List<Patient> getPatientsByDoctor(String doctorDni) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        List<Patient> patients = new ArrayList<>();
+            try {
+                connectToServer();
+                printWriter.println("VIEW_DOCTOR_PATIENTS"); 
+                printWriter.println(doctorDni); 
+
+                String patientString;
+                while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
+                    String[] parts = patientString.split(",");
+
+                    Patient patient = new Patient();
+                    patient.setDni(parts[0]);
+                    patient.setName(parts[1]);
+                    patient.setSurname(parts[2]);
+                    patients.add(patient);
+                }
+            } catch (IOException e) {
+                Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
+            } finally {
+                closeConnection(); // Cerrar la conexión al servidor
+            }
+        return patients; // Retornar la lista de pacientes
+
     }
+    public static void viewPatientInformation(String dni){
+        List<Surgery> surgeries = new ArrayList<>();
+        List<Symptom> symptoms = new ArrayList<>();
+        List<Disease> diseases = new ArrayList<>();
+        
+        try {
+                connectToServer();
+                printWriter.println("VIEW_PATIENT_INFORMATION"); 
+                printWriter.println(dni); 
+
+                String patientString;
+                while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
+                    String[] parts = patientString.split(",");
+
+                    Patient patient = new Patient();
+                    patient.setDni(parts[0]);
+                    patient.setName(parts[1]);
+                    patient.setSurname(parts[2]);
+                    patients.add(patient);
+                }
+            } catch (IOException e) {
+                Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
+            } finally {
+                closeConnection(); // Cerrar la conexión al servidor
+        }
+    } 
 }
 
 

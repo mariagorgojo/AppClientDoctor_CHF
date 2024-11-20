@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import pojos.Doctor;
+import pojos.Patient;
 
 public class Utilities {
     
@@ -102,7 +104,24 @@ public class Utilities {
                     return email != null && email.matches(emailpattern);
                 }
                  
-                 // Method to display a menu and return the selected option
+ public static void showDoctorDetails(Doctor doctor){
+     
+        System.out.println("\nDoctor Details:");
+        System.out.println("DNI: " + doctor.getDni());
+        System.out.println("Name: " + doctor.getName());
+        System.out.println("Surname: " + doctor.getSurname());
+        System.out.println("Telephone: " + doctor.getTelephone());
+        System.out.println("Email: " + doctor.getEmail());
+ }
+    public static void printPatientList(List<Patient> patients) {
+        System.out.println("=== Patient List ===");
+        for (int i = 0; i < patients.size(); i++) {
+            Patient patient = patients.get(i);
+            System.out.printf("%d. DNI: %s, Name: %s, Surname: %s%n", 
+                              i + 1, patient.getDni(), patient.getName(), patient.getSurname());
+    }
+}                      
+// Method to display a menu and return the selected option
     public static int displayMenu(String title, String[] options) {
         System.out.println(title);
         for (int i = 0; i < options.length; i++) {

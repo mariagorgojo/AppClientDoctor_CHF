@@ -15,7 +15,7 @@ public class DoctorMenu {
         mainMenu();
     }
 
-   private static void mainMenu() {
+    private static void mainMenu() {
     System.out.println("\n-- Welcome to the Doctor App --");
 
     while (true) {
@@ -156,26 +156,40 @@ public class DoctorMenu {
         }
     }
 
-    private static void viewPatientsMenu(String doctorDni) { // VOLVER
-        List<Patient> patients = ConnectionDoctor.getPatientsByDoctor(doctorDni);
+private static void viewPatientsMenu(String doctorDni) {
+    List<Patient> patients = ConnectionDoctor.getPatientsByDoctor(doctorDni);
 
-        if (patients.isEmpty()) {
-            System.out.println("\nNo patients found.");
-            return;
-        }
-
-        while (true) {
-            int choice = Utilities.displayListWithMenu(patients, "=== Patients ===", "Go back");
-
-            if (choice == 0) {
-                return;
-            } else {
-                Patient selectedPatient = patients.get(choice - 1);
-                viewEpisodesByPatient(selectedPatient);
-            }
-        }
+    if (patients.isEmpty()) {
+        System.out.println("\nNo patients found.");
+        return;
     }
 
+    // Mostrar la lista de pacientes usando el método en Utilities
+    Utilities.printPatientList(patients);
+
+    while (true) {
+        System.out.println("\nSelect a patient by number (or 0 to go back):");
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        try {
+            choice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            continue;
+        }
+
+        if (choice == 0) {
+            return;
+        } else if (choice > 0 && choice <= patients.size()) {
+            Patient selectedPatient = patients.get(choice - 1);
+            ConnectionDoctor.viewPatientInformation(selectedPatient.getDni()); 
+            //viewEpisodesByPatient(selectedPatient);
+        } else {
+            System.out.println("Invalid choice. Please try again.");
+        }
+    }
+}
     private static void viewEpisodesByPatient(Patient patient) {
         List<Episode> episodes = patient.getEpisodes();
 
