@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pojos.Disease;
 import pojos.Doctor;
+import pojos.Episode;
 import pojos.Patient;
 import pojos.Patient.Gender;
 import pojos.Surgery;
@@ -166,51 +167,104 @@ public class ConnectionDoctor {
         return patients; // Retornar la lista de pacientes
 
     }
+    public static Patient viewPatientInformation(String dni) throws IOException{
+        Patient patient = null;
+        try {
+            connectToServer();
+            printWriter.println("VIEW_PATIENT_INFORMATION");
+            printWriter.println(dni);
 
-    public static void viewPatientEpisode(String dni) {
-    List<Surgery> surgeries = new ArrayList<>();
-    List<Symptom> symptoms = new ArrayList<>();
-    List<Disease> diseases = new ArrayList<>();
+            String dataString = bufferedReader.readLine();
+            String[] parts = dataString.split(",");
+
+                if (parts.length == 7) {
+
+                    patient = new Patient();
+                    patient.setDni(parts[0]);
+                    patient.setName(parts[1]);
+                    patient.setSurname(parts[2]);
+                    patient.setEmail(parts[3]);
+                    patient.setGender(Gender.valueOf(parts[4].toUpperCase()));
+                    patient.setPhoneNumber(Integer.parseInt(parts[5])); // Convertir a entero
+                    patient.setDob(LocalDate.parse(parts[6], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+                    /*String[] doctorParts = patientParts[7].split(","); // Dividir directamente por comas
+
+                    Doctor doctor = new Doctor();
+                    doctor.setDni(doctorParts[0]);
+                    doctor.setName(doctorParts[1]);
+                    doctor.setSurname(doctorParts[2]);
+                    doctor.setTelephone(Integer.parseInt(doctorParts[3])); // Convertir teléfono a entero
+                    doctor.setEmail(doctorParts[4]);
+                    patient.setDoctor(doctor);*/  
+                    return patient; 
+              }else{
+                    System.out.println("Invalid data format received from server.");
+                    return null; 
+              }
+        } catch (IOException e) {
+             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+             closeConnection(); // Cerrar la conexión al servidor
+        }
+        return null;
+    }
+    public static void viewAllEpisodes(String dni){
+        ArrayList<Episode> episodes = new ArrayList<>(); 
+        
+    }
+    public static Episode viewPatientEpisode(Integer episode_id) {
+    ArrayList<Surgery> surgeries = new ArrayList<>();
+    ArrayList<Symptom> symptoms = new ArrayList<>();
+    ArrayList<Disease> diseases = new ArrayList<>();
+    Episode episode = null;
     
     try {
         connectToServer();
         printWriter.println("VIEW_PATIENT_EPISODE");
-        printWriter.println(dni);
+        printWriter.println(String.valueOf(episode_id));
 
         String dataString;
         while (!(dataString = bufferedReader.readLine()).equals("END_OF_LIST")) {
-            String[] parts = dataString.split(":");
+            String[] parts = dataString.split(",");
 
             if (parts.length == 2) {
                 String type = parts[0];
                 String data = parts[1]; // Tipo de dato: SURGERY, SYMPTOM, DISEASE
-
+                episode = new Episode(); 
+                
                 switch (type) {
                         case "SURGERY":
                         Surgery surgery = new Surgery();
                         surgery.setType(data);
                         surgeries.add(surgery);
+                        episode.setSurgeries(surgeries);
                         break;
 
                     case "SYMPTOM":
                         Symptom symptom = new Symptom();
                         symptom.setType(data);
                         symptoms.add(symptom);
+                        episode.setSymptoms(symptoms);
                         break;
 
                     case "DISEASE":
                         Disease disease = new Disease();
                         disease.setDisease(data);
                         diseases.add(disease);
+                        episode.setDiseases(diseases);
                         break;
 
                     default:
                         System.out.println("Unknown data type: " + type);
                         break;
                 }
+                
+                return episode; 
             } else {
                 System.out.println("Invalid data format received: " + dataString);
-            }
+                return null; 
+            }          
         }
         
        /* System.out.println("Surgeries:");
@@ -234,46 +288,7 @@ public class ConnectionDoctor {
         closeConnection(); // Cerrar la conexión al servidor
     }
 }
-    public static Patient viewPatientInformation(String dni) throws IOException{
-        Patient patient = null;
-        try {
-        connectToServer();
-        printWriter.println("VIEW_PATIENT_INFORMATION");
-        printWriter.println(dni);
-
-        String dataString = bufferedReader.readLine();
-        String[] parts = dataString.split(",");
-
-            if (parts.length == 7) {
-
-                patient = new Patient();
-                patient.setDni(parts[0]);
-                patient.setName(parts[1]);
-                patient.setSurname(parts[2]);
-                patient.setEmail(parts[3]);
-                patient.setGender(Gender.valueOf(parts[4].toUpperCase()));
-                patient.setPhoneNumber(Integer.parseInt(parts[5])); // Convertir a entero
-                patient.setDob(LocalDate.parse(parts[6], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-                /*String[] doctorParts = patientParts[7].split(","); // Dividir directamente por comas
-
-                Doctor doctor = new Doctor();
-                doctor.setDni(doctorParts[0]);
-                doctor.setName(doctorParts[1]);
-                doctor.setSurname(doctorParts[2]);
-                doctor.setTelephone(Integer.parseInt(doctorParts[3])); // Convertir teléfono a entero
-                doctor.setEmail(doctorParts[4]);
-                patient.setDoctor(doctor);*/  
-                return patient; 
-          }else{
-                System.out.println("Invalid data format received from server.");
-          }
-        } catch (IOException e) {
-             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-             closeConnection(); // Cerrar la conexión al servidor
-        }
-    }
+    
 }
 
 

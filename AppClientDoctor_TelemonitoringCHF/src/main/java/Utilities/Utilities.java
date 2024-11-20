@@ -113,6 +113,10 @@ public class Utilities {
         System.out.println("Telephone: " + doctor.getTelephone());
         System.out.println("Email: " + doctor.getEmail());
  }
+ public static void showPatientDetails(Patient patient){
+     System.out.println(patient.toString()); 
+   
+ }
     public static void printPatientList(List<Patient> patients) {
         System.out.println("=== Patient List ===");
         for (int i = 0; i < patients.size(); i++) {

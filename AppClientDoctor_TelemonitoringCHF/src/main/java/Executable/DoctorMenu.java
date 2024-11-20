@@ -4,6 +4,7 @@ import java.util.Scanner;
 import Utilities.Utilities; 
 import pojos.Doctor;
 import ConnectionDoctor.*;
+import java.io.IOException;
 import java.util.List;
 import pojos.*;
 
@@ -135,7 +136,7 @@ public class DoctorMenu {
 
     }
 
-   private static void doctorMenu(String doctorDni) {
+   private static void doctorMenu(String doctorDni) throws IOException {
         while (true) {
             int choice = Utilities.displayMenu("\n=== Doctor Menu ===",
                     new String[]{"View my details", "View patients", "Log out"});
@@ -158,7 +159,7 @@ public class DoctorMenu {
         }
     }
 
-private static void viewPatientsMenu(String doctorDni) {
+private static void viewPatientsMenu(String doctorDni) throws IOException {
     List<Patient> patients = ConnectionDoctor.getPatientsByDoctor(doctorDni);
 
     if (patients.isEmpty()) {
@@ -185,9 +186,9 @@ private static void viewPatientsMenu(String doctorDni) {
             return;
         } else if (choice > 0 && choice <= patients.size()) {
             Patient selectedPatient = patients.get(choice - 1);
-            //Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDni());
-            Utilities.showDoctorDetails(selectedPatient);
-            //viewEpisodesByPatient(selectedPatient);
+            Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDni());
+            Utilities.showPatientDetails(patient);
+            viewEpisodesByPatient(selectedPatient);
         } else {
             System.out.println("Invalid choice. Please try again.");
         }
