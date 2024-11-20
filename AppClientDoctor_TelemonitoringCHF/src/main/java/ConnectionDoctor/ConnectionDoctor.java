@@ -139,6 +139,7 @@ public class ConnectionDoctor {
            // printWriter.println("STOP");
             closeConnection(); // correct?
         }
+        return null;
     }
 
     public static List<Patient> getPatientsByDoctor(String doctorDni) {
@@ -209,6 +210,8 @@ public class ConnectionDoctor {
         }
         return null;
     }
+    
+    //ES NECESARIO?
     public static void viewAllEpisodes(String dni){
         ArrayList<Episode> episodes = new ArrayList<>(); 
         
@@ -287,6 +290,7 @@ public class ConnectionDoctor {
     } finally {
         closeConnection(); // Cerrar la conexión al servidor
     }
+    return null;
 }
     
 }

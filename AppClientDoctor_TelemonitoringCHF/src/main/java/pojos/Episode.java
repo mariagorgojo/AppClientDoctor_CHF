@@ -116,10 +116,9 @@ public class Episode {
 
     @Override
     public String toString() {
-        return "Episodes{" + "id=" + id + ", patient_id=" + patient_id + 
-                ", date=" + date + ", surgeries=" + surgeries + ", diseases=" 
-                + diseases + ", Bitalino Recordings=" + recordings + 
-                ", symptoms=" + symptoms + '}';
+        return "Episodes{" + "date=" + date + ", surgeries=" + surgeries + ", diseases=" 
+                + diseases + ", symptoms=" + symptoms + ", Bitalino Recordings=" 
+                + recordings +'}';
     }
     
    

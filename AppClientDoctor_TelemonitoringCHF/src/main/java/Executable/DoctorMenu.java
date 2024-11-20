@@ -5,6 +5,7 @@ import Utilities.Utilities;
 import pojos.Doctor;
 import ConnectionDoctor.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import pojos.*;
 
@@ -195,14 +196,27 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
     }
 }
     private static void viewEpisodesByPatient(Patient patient) {
-        List<Episode> episodes = patient.getEpisodes();
+        ArrayList<Episode> episodes = patient.getEpisodes();
 
         if (episodes.isEmpty()) {
             System.out.println("\nNo episodes found for this patient.");
             return;
-        }
+        } else{
 
-        while (true) {
+        System.out.println("Choose an episode to view more information");
+
+        for (int i =0; i<episodes.size(); i++){
+            System.out.println((i+1)+" Date: " +episodes.get(i).getDate());       
+        }
+        int option= Utilities.getValidInput(1, episodes.size());
+        Episode selectedEpisode = episodes.get(option - 1);
+        Episode episode = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId());
+        System.out.println(episode.toString());
+                
+           
+        }
+                    
+       /* while (true) {
             int choice = Utilities.displayListWithMenu(episodes,
                     "=== Episodes for " + patient.getName() + " ===", "Go back");
 
@@ -212,7 +226,7 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
                 Episode selectedEpisode = episodes.get(choice - 1);
                 viewRecordingsByEpisode(selectedEpisode);
             }
-        }
+        }*/
     }
 
     private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
