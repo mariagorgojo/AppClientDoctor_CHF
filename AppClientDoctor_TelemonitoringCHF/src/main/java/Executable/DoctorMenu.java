@@ -187,7 +187,10 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
             return;
         } else if (choice > 0 && choice <= patients.size()) {
             Patient selectedPatient = patients.get(choice - 1);
+           // System.out.println(selectedPatient);
             Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDni());
+                        //System.out.println("después \n" +patient );
+
             Utilities.showPatientDetails(patient);
             // debería mandar todo (episodes)
             viewEpisodesByPatient(selectedPatient);

@@ -176,6 +176,7 @@ public class ConnectionDoctor {
         Patient patient = null;
         try {
             connectToServer();
+           // System.out.println("conecta con el server");
             printWriter.println("VIEW_PATIENT_INFORMATION");
             printWriter.println(dni);
 
