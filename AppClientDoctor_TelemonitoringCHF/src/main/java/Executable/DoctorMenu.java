@@ -189,6 +189,7 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
             Patient selectedPatient = patients.get(choice - 1);
             Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDni());
             Utilities.showPatientDetails(patient);
+            // debería mandar todo (episodes)
             viewEpisodesByPatient(selectedPatient);
         } else {
             System.out.println("Invalid choice. Please try again.");
@@ -204,12 +205,15 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
         } else{
 
         System.out.println("Choose an episode to view more information");
-
+        
+        // Imprime la lista de episodios por fecha
         for (int i =0; i<episodes.size(); i++){
             System.out.println((i+1)+" Date: " +episodes.get(i).getDate());       
         }
+        // elegir un episodio
         int option= Utilities.getValidInput(1, episodes.size());
         Episode selectedEpisode = episodes.get(option - 1);
+        // ver todo lo que tiene un episodio 
         Episode episode = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId());
         System.out.println(episode.toString());
                 

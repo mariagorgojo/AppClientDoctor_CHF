@@ -102,7 +102,7 @@ public class Episode {
         return recordings;
     }
 
-    public void setRecording(ArrayList<Recording> recordings) {
+    public void setRecordings(ArrayList<Recording> recordings) {
         this.recordings = recordings;
     }
 
