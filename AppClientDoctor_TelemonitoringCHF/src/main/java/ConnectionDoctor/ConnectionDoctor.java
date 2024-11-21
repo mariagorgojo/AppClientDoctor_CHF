@@ -147,18 +147,21 @@ public class ConnectionDoctor {
         List<Patient> patients = new ArrayList<>();
         try {
             connectToServer();
+            
             printWriter.println("VIEW_DOCTOR_PATIENTS");
             printWriter.println(doctorDni);
+            
 
             String patientString;
             while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
                 String[] parts = patientString.split(",");
-
+                System.out.println("Reading patients");
                 Patient patient = new Patient();
                 patient.setDni(parts[0]);
                 patient.setName(parts[1]);
                 patient.setSurname(parts[2]);
                 patients.add(patient);
+               
             }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);

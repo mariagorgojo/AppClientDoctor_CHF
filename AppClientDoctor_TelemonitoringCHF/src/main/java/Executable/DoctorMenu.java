@@ -162,7 +162,7 @@ public class DoctorMenu {
 
 private static void viewPatientsMenu(String doctorDni) throws IOException {
     List<Patient> patients = ConnectionDoctor.getPatientsByDoctor(doctorDni);
-
+    System.out.println("ha llegado al menu");
     if (patients.isEmpty()) {
         System.out.println("\nNo patients found.");
         return;
