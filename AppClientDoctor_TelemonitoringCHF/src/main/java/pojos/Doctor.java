@@ -6,50 +6,57 @@ package pojos;
 
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+import pojos.Patient;
+
 public class Doctor {
-    
+
     // no estan todos los atributos RW
-        private Integer id;
-    	private String dni;
-	private String name;
-        private String surname;
-	private Integer telephone;
-        private String email;
-        private ArrayList<Patient> patients;
+    private Integer id;
+    private String dni;
+    private String password;
+    private String name;
+    private String surname;
+    private Integer telephone;
+    private String email;
+    private ArrayList<Patient> patients;
 
-     public Doctor() {
-        this.patients = new ArrayList<>();
-
-    }
-    public Doctor(String dni, String name, String surname, Integer telephone, String email) {
+    public Doctor(String dni, String password, String name, String surname, Integer telephone, String email) {
         this.dni = dni;
+        this.password = password;
         this.name = name;
         this.surname = surname;
         this.telephone = telephone;
         this.email = email;
-        this.patients = new ArrayList<>();
+        patients = new ArrayList<>();
     }
-    
-        public Doctor(Integer id,String dni, String name, String surname, Integer telephone, String email) {
-        this.id= id;
+
+    public Doctor(Integer id, String dni, String password, String name, String surname, Integer telephone, String email) {
+        this.id = id;
         this.dni = dni;
+        this.password = password;
         this.name = name;
         this.surname = surname;
         this.telephone = telephone;
         this.email = email;
-        this.patients = new ArrayList<>();
+        patients = new ArrayList<>();
     }
 
     public Doctor(Integer id) {
         this.id = id;
     }
 
-    public Doctor(String dni) {
-        this.dni = dni;
-    }        
-    
+    public Doctor() {
+        patients = new ArrayList<>();
+
+    }
+
     public Integer getId() {
         return id;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public void setId(Integer id) {
@@ -60,8 +67,12 @@ public class Doctor {
         return dni;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getSurname() {
@@ -71,9 +82,7 @@ public class Doctor {
     public void setSurname(String surname) {
         this.surname = surname;
     }
-    
-    
-    
+
     public String getName() {
         return name;
     }
@@ -105,11 +114,10 @@ public class Doctor {
     public void setPatients(ArrayList<Patient> patients) {
         this.patients = patients;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("%s,%s,%s,%s,%s", dni, name, surname, String.valueOf(telephone), email);
     }
-  
-    
+
 }

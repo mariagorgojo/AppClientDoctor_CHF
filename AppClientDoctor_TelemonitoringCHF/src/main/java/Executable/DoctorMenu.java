@@ -119,7 +119,7 @@ public class DoctorMenu {
         } while (!Utilities.validateEmail(email));
         
     
-        Doctor doctor = new Doctor(dni, name, surname, telephone, email);
+        Doctor doctor = new Doctor(dni,password, name, surname, telephone, email);
         
         try{
          if ( ConnectionDoctor.sendRegisterServer(doctor, password)) { 
@@ -162,7 +162,8 @@ public class DoctorMenu {
 
 private static void viewPatientsMenu(String doctorDni) throws IOException {
     List<Patient> patients = ConnectionDoctor.getPatientsByDoctor(doctorDni);
-    System.out.println("ha llegado al menu");
+    //System.out.println("ha llegado al menu");
+    
     if (patients.isEmpty()) {
         System.out.println("\nNo patients found.");
         return;
@@ -188,7 +189,7 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
         } else if (choice > 0 && choice <= patients.size()) {
             Patient selectedPatient = patients.get(choice - 1);
            // System.out.println(selectedPatient);
-            Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDni());
+            Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDNI());
                         //System.out.println("después \n" +patient );
 
             Utilities.showPatientDetails(patient);
@@ -256,3 +257,24 @@ private static void viewPatientsMenu(String doctorDni) throws IOException {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

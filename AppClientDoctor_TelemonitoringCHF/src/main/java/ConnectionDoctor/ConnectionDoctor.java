@@ -65,7 +65,7 @@ public class ConnectionDoctor {
             connectToServer();
             printWriter.println("REGISTER_DOCTOR");
             printWriter.println(doctor.getDni());
-            printWriter.println(password);
+            printWriter.println(doctor.getPassword());
             printWriter.println(doctor.getName());
             printWriter.println(doctor.getSurname());
             printWriter.println(doctor.getTelephone().toString());
@@ -151,8 +151,9 @@ public class ConnectionDoctor {
             printWriter.println("VIEW_DOCTOR_PATIENTS");
             printWriter.println(doctorDni);
             
-
-            String patientString;
+            if(!(bufferedReader.readLine()).equals("EMPTY")){
+                     
+            String patientString;            
             while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
                 String[] parts = patientString.split(",");
                 System.out.println("Reading patients");
@@ -163,6 +164,7 @@ public class ConnectionDoctor {
                 patients.add(patient);
                
             }
+        }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
         } finally {
