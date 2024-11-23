@@ -4,10 +4,8 @@
  */
 package pojos;
 
-import java.util.ArrayList;
 
 import java.util.ArrayList;
-import pojos.Patient;
 
 public class Doctor {
 
@@ -42,15 +40,6 @@ public class Doctor {
         patients = new ArrayList<>();
     }
 
-    public Doctor(Integer id) {
-        this.id = id;
-    }
-
-    public Doctor() {
-        patients = new ArrayList<>();
-
-    }
-
     public Integer getId() {
         return id;
     }
@@ -71,16 +60,27 @@ public class Doctor {
         return password;
     }
 
+    
+    
+
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public String getSurname() {
         return surname;
     }
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+    public Doctor(Integer id) {
+        this.id = id;
+    }
+
+    public Doctor() {
+        patients = new ArrayList<>();
+
     }
 
     public String getName() {
@@ -120,4 +120,6 @@ public class Doctor {
         return String.format("%s,%s,%s,%s,%s", dni, name, surname, String.valueOf(telephone), email);
     }
 
+
+ 
 }

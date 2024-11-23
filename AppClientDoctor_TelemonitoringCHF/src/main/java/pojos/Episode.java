@@ -101,7 +101,7 @@ public class Episode {
     public ArrayList<Recording> getRecordings() {
         return recordings;
     }
-
+    
     public void setRecordings(ArrayList<Recording> recordings) {
         this.recordings = recordings;
     }

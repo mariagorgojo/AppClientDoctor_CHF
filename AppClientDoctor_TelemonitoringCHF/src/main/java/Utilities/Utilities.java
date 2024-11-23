@@ -119,7 +119,7 @@ public class Utilities {
         for (int i = 0; i < patients.size(); i++) {
             Patient patient = patients.get(i);
             System.out.printf("%d. DNI: %s, Name: %s, Surname: %s%n",
-                    i + 1, patient.getDni(), patient.getName(), patient.getSurname());
+                    i + 1, patient.getDNI(), patient.getName(), patient.getSurname());
         }
     }
 
@@ -129,7 +129,7 @@ public class Utilities {
         for (int i = 0; i < options.length; i++) {
             System.out.printf("%d. %s\n", i + 1, options[i]);
         }
-        System.out.print("Choose an option: ");
+        System.out.println("Choose an option: ");
         return getValidInput(0, options.length - 1);
     }
 
