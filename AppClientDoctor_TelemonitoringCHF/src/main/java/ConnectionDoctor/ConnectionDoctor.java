@@ -38,7 +38,7 @@ public class ConnectionDoctor {
     private static void connectToServer() throws IOException {
         if (socket == null || socket.isClosed()) {
             System.out.println("Connecting to server...");
-            socket = new Socket("localhost", 9001); // cambiar mas adelante 
+            socket = new Socket("localhost", 9090); // cambiar mas adelante 
             printWriter = new PrintWriter(socket.getOutputStream(), true);
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
