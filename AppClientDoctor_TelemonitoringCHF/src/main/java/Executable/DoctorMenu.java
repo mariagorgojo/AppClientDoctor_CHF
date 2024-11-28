@@ -144,14 +144,13 @@ public class DoctorMenu {
 
             switch (choice) {
                 case 1: // VOLVER --> metodo de ConnectionDoctor es correcto? 
-                    
                     Doctor doctor = ConnectionDoctor.viewDoctorDetails(doctorDni); // pensar + base d dts --> devulve doctor + toString
                     Utilities.showDoctorDetails(doctor);
                     break;
                 case 2:
                     viewPatientsMenu(doctorDni);
                     break;
-                case 0:
+                case 3:
                     System.out.println("Logging out...");
                     return;
                 default:
