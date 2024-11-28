@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class Recording {
     
-    private Integer id;   
+    private int id;   
     private Type type;
-    private Integer duration;
+    private final int duration=60;
     private LocalDate date;
     private String signal_path;
     private ArrayList<Integer> data;
@@ -22,29 +22,35 @@ public class Recording {
     // constructors
     public Recording(){            
         data = new ArrayList<>();
-    }        
-    //constructor w everything
-
-    public Recording(Integer id, Type type, Integer duration, LocalDate date, 
+    }     
+    
+    //constructor everything
+    public Recording(Integer id, Type type, LocalDate date, 
             String signal_path, ArrayList<Integer> data, Integer episode_id) {
         this.id = id;
         this.type = type;
-        this.duration = duration;
         this.date = date;
         this.episode_id=episode_id;
         this.signal_path = signal_path;
         this.data = data;
     }
-
-    public Recording(Type type, Integer duration, LocalDate date, String signal_path, ArrayList<Integer> data, Integer episode_id) {
+    
+    public Recording(Type type, LocalDate date, String signal_path, ArrayList<Integer> data, Integer episode_id) {
         this.type = type;
-        this.duration = duration;
         this.date = date;
         this.signal_path = signal_path;
         this.data = data;
         this.episode_id = episode_id;
     }
 
+      public Recording( Type type, LocalDate date, 
+            String signal_path, ArrayList<Integer> data) {
+        
+        this.type = type;
+        this.date = date;
+        this.signal_path = signal_path;
+        this.data = data;
+    }
     public Recording(Integer id) {
         this.id = id;
     }
@@ -79,10 +85,6 @@ public class Recording {
     
     public Integer getDuration() {
         return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 
     public LocalDate getDate() {
