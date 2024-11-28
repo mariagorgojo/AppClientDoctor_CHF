@@ -138,8 +138,9 @@ public class DoctorMenu {
     }
 
    private static void doctorMenu(String doctorDni) throws IOException {
-        while (true) {
-            int choice = Utilities.displayMenu("\n=== Doctor Menu ===",
+       int choice;
+        do{
+            choice = Utilities.displayMenu("\n=== Doctor Menu ===",
                     new String[]{"View my details", "View patients", "Log out"});
 
             switch (choice) {
@@ -152,11 +153,12 @@ public class DoctorMenu {
                     break;
                 case 3:
                     System.out.println("Logging out...");
-                    return;
+                    break;
                 default:
                     System.out.println("Invalid option. Please try again.");
+                    break;
             }
-        }
+        }while(choice!=3);
     }
 
 private static void viewPatientsMenu(String doctorDni) throws IOException {
