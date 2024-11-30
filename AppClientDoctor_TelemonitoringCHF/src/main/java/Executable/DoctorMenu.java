@@ -4,6 +4,7 @@ import java.util.Scanner;
 import Utilities.Utilities;
 import pojos.Doctor;
 import ConnectionDoctor.*;
+import Swing.ReconstructionSignal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -288,14 +289,13 @@ public class DoctorMenu {
                         break; // Salir del bucle una vez que se encuentra el recording.
                     }
                 }
-
+                ArrayList<Integer> data = foundRecording.getData(); 
                 // Si se encuentra el recording, mostrar los detalles.
                 if (foundRecording != null) {
-                    recontructSignal(foundRecording);
+                    ReconstructionSignal.reconstructSignal(data); 
                 } else {
                     System.out.println("No se encontró un recording con ese ID.");
                 }
-
             } else {
                 System.out.println("There is nothing inserted in episode ID: " + selectedEpisode.getId());
             }
@@ -304,9 +304,6 @@ public class DoctorMenu {
         }
     }
 
-    private static void recontructSignal(Recording recording) {
-
-    }
 
     private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
         List<Recording> recordings = episode.getRecordings();
