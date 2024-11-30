@@ -18,6 +18,10 @@ public class Surgery {
             
         }
 
+    public void setSurgery(String surgery) {
+        this.surgery = surgery;
+    }
+
 	public Surgery(int id, String surgery) {
 		this.id = id;
 		this.surgery = surgery;

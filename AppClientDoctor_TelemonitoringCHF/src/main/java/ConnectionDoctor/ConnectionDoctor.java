@@ -147,24 +147,24 @@ public class ConnectionDoctor {
         List<Patient> patients = new ArrayList<>();
         try {
             connectToServer();
-            
+
             printWriter.println("VIEW_DOCTOR_PATIENTS");
             printWriter.println(doctorDni);
-            
-            if(!(bufferedReader.readLine()).equals("EMPTY")){
-                     
-            String patientString;            
-            while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
-                String[] parts = patientString.split(",");
-                System.out.println("Reading patients");
-                Patient patient = new Patient();
-                patient.setDni(parts[0]);
-                patient.setName(parts[1]);
-                patient.setSurname(parts[2]);
-                patients.add(patient);
-               
+
+            if (!(bufferedReader.readLine()).equals("EMPTY")) {
+
+                String patientString;
+                while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
+                    String[] parts = patientString.split(",");
+                    System.out.println("Reading patients");
+                    Patient patient = new Patient();
+                    patient.setDni(parts[0]);
+                    patient.setName(parts[1]);
+                    patient.setSurname(parts[2]);
+                    patients.add(patient);
+
+                }
             }
-        }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
         } finally {
@@ -178,7 +178,7 @@ public class ConnectionDoctor {
         Patient patient = null;
         try {
             connectToServer();
-           // System.out.println("conecta con el server");
+            // System.out.println("conecta con el server");
             printWriter.println("VIEW_PATIENT_INFORMATION");
             printWriter.println(dni);
 
@@ -224,60 +224,86 @@ public class ConnectionDoctor {
 
     }
 
-    public static Episode viewPatientEpisode(Integer episode_id) {
+    public static Episode viewPatientEpisode(Integer episode_id, int patient_Id) {
+
+        Episode episode = new Episode();
+
         List<Surgery> surgeries = new ArrayList<>();
         List<Symptom> symptoms = new ArrayList<>();
         List<Disease> diseases = new ArrayList<>();
         List<Recording> recordings = new ArrayList<>();
-        // PENSAR COMO MOSTRAR RECORDING SIGNALPATH??
-        Episode episode = null;
 
         try {
             connectToServer();
-            printWriter.println("VIEW_PATIENT_EPISODE");
+
+            printWriter.println("VIEW_EPISODE_ALL_DETAILS");
             printWriter.println(String.valueOf(episode_id));
+            printWriter.println(String.valueOf(patient_Id));
 
             String dataString;
-            while (!(dataString = bufferedReader.readLine()).equals("END_OF_LIST")) {
+            while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
                 String[] parts = dataString.split(",");
 
-                if (parts.length == 2) {
-                    String type = parts[0];
-                    String data = parts[1]; // Tipo de dato: SURGERY, SYMPTOM, DISEASE
-                    episode = new Episode();
+                if (parts.length >= 2) {
 
-                    switch (type) {
-                        case "SURGERY":
+                    switch (parts[0]) {
+                        case "SURGERIES":
                             Surgery surgery = new Surgery();
-                            surgery.setType(data);
-                            surgeries.add(surgery);
-                            episode.setSurgeries((ArrayList<Surgery>) surgeries);
+                            surgery.setSurgery(parts[1]);
+                            episode.getSurgeries().add(surgery);
                             break;
 
-                        case "SYMPTOM":
+                        case "SYMPTOMS":
                             Symptom symptom = new Symptom();
-                            symptom.setType(data);
-                            symptoms.add(symptom);
-                            episode.setSymptoms((ArrayList<Symptom>) symptoms);
+                            symptom.setSymptom(parts[1]);
+                            episode.getSymptoms().add(symptom);
                             break;
 
-                        case "DISEASE":
+                        case "DISEASES":
                             Disease disease = new Disease();
-                            disease.setDisease(data);
-                            diseases.add(disease);
-                            episode.setDiseases((ArrayList<Disease>) diseases);
-                            break;
-                        case "RECORDING":
-                            // SignalPath: NameSurname_Date(hour)_Type
-                            Recording recording = new Recording();
-                            recording.setSignal_path(data);
-                            recordings.add(recording);
-                            episode.setRecordings((ArrayList<Recording>) recordings);
+                            disease.setDisease(parts[1]);
+                            episode.getDiseases().add(disease);
                             break;
 
-                        default:
-                            System.out.println("Unknown data type: " + type);
-                            break;
+                        case "RECORDINGS": // change -> add data 
+                            System.out.println("In recordings connect patient");
+
+                            if (parts.length >= 3) {
+                                try {
+                                    // Parsear ID
+                                    int id = Integer.parseInt(parts[1]);
+
+                                    // Leer y asignar la ruta del archivo
+                                    String signalPath = parts[2];
+
+                                    // Extraer y procesar el array de datos
+                                    String rawData = parts[3]; // Datos encapsulados en [ ]
+                                    rawData = rawData.substring(1, rawData.length() - 1); // Eliminar los corchetes [ ]
+                                    String[] dataParts = rawData.split(","); // Separar datos por comas
+                                    ArrayList<Integer> data = new ArrayList<>();
+                                    for (String dataPart : dataParts) {
+                                        try {
+                                            data.add(Integer.parseInt(dataPart));
+                                        } catch (NumberFormatException e) {
+                                            System.err.println("Invalid data value: " + dataPart);
+                                        }
+                                    }
+
+                                    // Crear y agregar la grabación al episodio
+                                    Recording recording = new Recording();
+                                    recording.setId(id);
+                                    recording.setSignal_path(signalPath);
+                                    recording.setData(data);
+                                    episode.getRecordings().add(recording);
+
+                                } catch (NumberFormatException e) {
+                                    System.err.println("Invalid ID format in RECORDINGS: " + parts[1]);
+                                }
+                            } else {
+                                System.err.println("Invalid RECORDINGS format: " + dataString);
+                            }
+                        // ns si un break creo q no
+
                     }
 
                     return episode;
@@ -287,21 +313,6 @@ public class ConnectionDoctor {
                 }
             }
 
-            /* System.out.println("Surgeries:");
-        for (Surgery surgery : surgeries) {
-            System.out.println("- " + surgery.getType());
-        }
-
-        System.out.println("\nSymptoms:");
-        for (Symptom symptom : symptoms) {
-            System.out.println("- " + symptom.getType());
-        }
-
-        System.out.println("\nDiseases:");
-        for (Disease disease : diseases) {
-            System.out.println("- " + disease.getDisease());
-        }
-             */
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
         } finally {

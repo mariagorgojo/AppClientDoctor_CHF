@@ -23,6 +23,10 @@ public class Recording {
     public Recording(){            
         data = new ArrayList<>();
     }     
+
+    public void setId(int id) {
+        this.id = id;
+    }
     
     //constructor everything
     public Recording(Integer id, Type type, LocalDate date, 

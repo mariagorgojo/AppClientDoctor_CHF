@@ -46,6 +46,10 @@ public class Symptom {
 		this.symptom = symptom;
 	}
 
+    public void setSymptom(String symptom) {
+        this.symptom = symptom;
+    }
+
 
 	@Override
 	public String toString() {
