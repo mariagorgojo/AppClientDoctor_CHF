@@ -302,7 +302,7 @@ public class ConnectionDoctor {
                             } else {
                                 System.err.println("Invalid RECORDINGS format: " + dataString);
                             }
-                        // ns si un break creo q no
+                            break;
 
                     }
 

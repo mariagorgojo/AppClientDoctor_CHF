@@ -256,7 +256,7 @@ public class DoctorMenu {
         Episode selectedEpisode = episodes.get(option - 1); // CHECK
 
         // Consultar detalles del episodio
-        Episode episodeDetails = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId(), patient.getId() );
+        Episode episodeDetails = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId(), patient.getId());
         if (episodeDetails != null) {
             ArrayList<Surgery> surgeries = episodeDetails.getSurgeries();
             ArrayList<Symptom> symptoms = episodeDetails.getSymptoms();
@@ -270,15 +270,42 @@ public class DoctorMenu {
                 System.out.println("Symptoms: " + symptoms);
                 System.out.println("Diseases: " + diseases);
                 System.out.println("Recordings:");
+
+                System.out.println("\nSelect an id to see a specific recording:\n");
                 for (Recording rec : recordings) {
                     System.out.println("ID: " + rec.getId() + ", Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
                 }
+                Scanner scanner = new Scanner(System.in);
+
+                System.out.print("Introduce el ID del recording: ");
+                String idBuscado = scanner.nextLine(); // Leer el ID introducido por el usuario.
+
+                // Buscar el recording con ese id.-> metodo en recording
+                Recording foundRecording = null;
+                for (Recording rec : recordings) {
+                    if (rec.getId().equals(idBuscado)) {
+                        foundRecording = rec;
+                        break; // Salir del bucle una vez que se encuentra el recording.
+                    }
+                }
+
+                // Si se encuentra el recording, mostrar los detalles.
+                if (foundRecording != null) {
+                    recontructSignal(foundRecording);
+                } else {
+                    System.out.println("No se encontró un recording con ese ID.");
+                }
+
             } else {
                 System.out.println("There is nothing inserted in episode ID: " + selectedEpisode.getId());
             }
         } else {
             System.out.println("Episode details could not be retrieved.");
         }
+    }
+
+    private static void recontructSignal(Recording recording) {
+
     }
 
     private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
