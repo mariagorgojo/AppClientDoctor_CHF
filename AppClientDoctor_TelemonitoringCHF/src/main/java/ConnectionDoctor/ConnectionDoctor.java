@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ConnectionDoctor {
         }
     }
 
-    private static void closeConnection() {
+    public static void closeConnection() {
         try {
             if (printWriter != null) {
                 printWriter.close();
@@ -80,10 +81,10 @@ public class ConnectionDoctor {
         } catch (IOException e) {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
-        } finally {
+        }/* finally {
             // printWriter.println("STOP");
             closeConnection(); // correct?
-        }
+        }*/
     }
 
     public static boolean validateLogin(String dni, String password) {
@@ -105,10 +106,11 @@ public class ConnectionDoctor {
         } catch (IOException e) {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
-        } finally {
+        }
+        /*finally {
             //printWriter.println("STOP"); // TO DO VER SI QUITARLO O NO 
             closeConnection();
-        }
+        }*/
     }
 
     public static Doctor viewDoctorDetails(String doctorDni) {
@@ -135,9 +137,9 @@ public class ConnectionDoctor {
             }
         } catch (IOException e) {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
+            /*} finally {
             // printWriter.println("STOP");
-            closeConnection(); // correct?
+            closeConnection(); // correct?*/
         }
         return null;
     }
@@ -150,26 +152,33 @@ public class ConnectionDoctor {
 
             printWriter.println("VIEW_DOCTOR_PATIENTS");
             printWriter.println(doctorDni);
+            String firstLine = bufferedReader.readLine();
+           // System.out.println(firstLine);
+            if (!"EMPTY".equals(firstLine)) {
 
-            if (!(bufferedReader.readLine()).equals("EMPTY")) {
-
-                String patientString;
-                while (!(patientString = bufferedReader.readLine()).equals("END_OF_LIST")) {
+                String patientString = firstLine.trim();
+                while (!(patientString.equals("END_OF_LIST"))) {
                     String[] parts = patientString.split(",");
-                    System.out.println("Reading patients");
-                    Patient patient = new Patient();
-                    patient.setDni(parts[0]);
-                    patient.setName(parts[1]);
-                    patient.setSurname(parts[2]);
-                    patients.add(patient);
+                    //System.out.println("Reading patients");
+                    if (parts.length == 3) { // Asegurar formato correcto
 
+                        Patient patient = new Patient();
+                        patient.setDni(parts[0]);
+                        patient.setName(parts[1]);
+                        patient.setSurname(parts[2]);
+                        patients.add(patient);
+                      //  System.out.println(patient);
+                    } else {
+                        System.out.println("Malformed line: " + patientString); // Debug de errores
+                    }
+                    patientString = bufferedReader.readLine().trim();
                 }
             }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
+            /*} finally {
             closeConnection(); // Cerrar la conexión al servidor
-        }
+             */ }
         return patients; // Retornar la lista de pacientes
 
     }
@@ -185,16 +194,16 @@ public class ConnectionDoctor {
             String dataString = bufferedReader.readLine();
             String[] parts = dataString.split(",");
 
-            if (parts.length == 7) {
-
-                patient = new Patient();
-                patient.setDni(parts[0]);
-                patient.setName(parts[1]);
-                patient.setSurname(parts[2]);
-                patient.setEmail(parts[3]);
-                patient.setGender(Gender.valueOf(parts[4].toUpperCase()));
-                patient.setPhoneNumber(Integer.parseInt(parts[5])); // Convertir a entero
-                patient.setDob(LocalDate.parse(parts[6], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            if (parts.length == 8) {
+                patient=new Patient();
+                patient.setId(Integer.parseInt(parts[0]));
+                patient.setDni(parts[1]);
+                patient.setName(parts[2]);
+                patient.setSurname(parts[3]);
+                patient.setEmail(parts[4]);
+                patient.setGender(Gender.valueOf(parts[5].toUpperCase()));
+                patient.setPhoneNumber(Integer.parseInt(parts[6])); // Convertir a entero
+                patient.setDob(LocalDate.parse(parts[7], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
                 /*String[] doctorParts = patientParts[7].split(","); // Dividir directamente por comas
 
@@ -212,21 +221,61 @@ public class ConnectionDoctor {
             }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
+            /*} finally {
             closeConnection(); // Cerrar la conexión al servidor
+             */
         }
-        return null;
+        return patient;
     }
 
-    //ES NECESARIO?
-    public static void viewAllEpisodes(String dni) {
+
+    
+    public static ArrayList<Episode> viewAllEpisodes(String patientDni) throws IOException {
         ArrayList<Episode> episodes = new ArrayList<>();
 
-    }
+        try {
+            // Conectar al servidor
+            connectToServer();
+            System.out.println("CONECTED TO THE SERVER");
+            printWriter.println("VIEW_PATIENT_EPISODES");
+            printWriter.println(patientDni); // Enviar el DNI del paciente
 
-    public static Episode viewPatientEpisode(Integer episode_id, int patient_Id) {
+            // Leer la lista de episodios desde el servidor
+            String dataString;
+            while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
+               // System.out.println("Data received from server: " + dataString);
+
+                String[] parts = dataString.split(",");
+                if (parts.length == 2) { // Validar que los datos contengan ID y Fecha
+                    Episode episode = new Episode();
+                    episode.setId(Integer.parseInt(parts[0])); // ID del episodio
+                    //episode.setDate(LocalDateTime.parse(parts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSS"))); // Fecha
+                    episode.setDate(LocalDateTime.parse(parts[1], DateTimeFormatter.ISO_DATE_TIME));
+
+                    episodes.add(episode);
+                } else {
+                    System.err.println("Error seeing episodes");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error retrieving episodes: " + e.getMessage());
+
+            // No se debería cerrar la conexión, cerrar SOLO al final de las operaciones
+            // cerrar en el menu del paciente
+            /* } finally {
+            // Asegurar que la conexión al servidor se cierra
+            closeConnection();
+             */
+        }
+        return episodes;
+    }
+    
+    
+
+    public static Episode viewPatientEpisode(int episode_id, int patient_Id) {
 
         Episode episode = new Episode();
+        //    System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
 
         List<Surgery> surgeries = new ArrayList<>();
         List<Symptom> symptoms = new ArrayList<>();
@@ -235,11 +284,12 @@ public class ConnectionDoctor {
 
         try {
             connectToServer();
+           // System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
 
             printWriter.println("VIEW_EPISODE_ALL_DETAILS");
             printWriter.println(String.valueOf(episode_id));
             printWriter.println(String.valueOf(patient_Id));
-
+           // System.out.println("Patient id. connection doctor"+ patient_Id);
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
                 String[] parts = dataString.split(",");
@@ -315,9 +365,9 @@ public class ConnectionDoctor {
 
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
+            /* } finally {
             closeConnection(); // Cerrar la conexión al servidor
-        }
+             */ }
         return null;
     }
 

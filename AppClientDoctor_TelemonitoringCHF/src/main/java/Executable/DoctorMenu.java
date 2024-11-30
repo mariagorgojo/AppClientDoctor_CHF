@@ -15,7 +15,12 @@ public class DoctorMenu {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        mainMenu();
+     try {
+            mainMenu();
+            //nuevo
+        } finally {
+            ConnectionDoctor.closeConnection(); // Cierra la conexión al finalizar
+        }
     }
 
     private static void mainMenu() {
@@ -171,17 +176,9 @@ public class DoctorMenu {
         // Mostrar la lista de pacientes usando el método en Utilities
         Utilities.printPatientList(patients);
 
-        while (true) {
+       // while (true) {
             System.out.println("\nSelect a patient by number (or 0 to go back):");
-            Scanner scanner = new Scanner(System.in);
-            int choice;
-
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
-                continue;
-            }
+            int choice=Utilities.readInteger();
 
             if (choice == 0) {
                 return;
@@ -193,10 +190,10 @@ public class DoctorMenu {
 
                 Utilities.showPatientDetails(patient);
                 // debería mandar todo (episodes)
-                viewEpisodesByPatient(selectedPatient);
+                viewEpisodesByPatient(patient);
             } else {
                 System.out.println("Invalid choice. Please try again.");
-            }
+           // }
         }
     }
 
@@ -237,8 +234,8 @@ public class DoctorMenu {
             }
         }
     }*/
-    private static void viewEpisodesByPatient(Patient patient) {
-        ArrayList<Episode> episodes = patient.getEpisodes();
+    private static void viewEpisodesByPatient(Patient patient) throws IOException {
+        ArrayList<Episode> episodes=ConnectionDoctor.viewAllEpisodes(patient.getDNI());// = patient.getEpisodes();
 
         if (episodes.isEmpty()) {
             System.out.println("\nNo episodes found for this patient.");
@@ -253,9 +250,17 @@ public class DoctorMenu {
 
         // Solicitar selección del episodio
         System.out.println("Enter the ID of the episode you want to view details for:");
-        int option = Utilities.getValidInput(1, episodes.size());
-        Episode selectedEpisode = episodes.get(option - 1); // CHECK
+        int option = Utilities.readInteger();
 
+        Episode selectedEpisode = null;
+                for (Episode episode : episodes) {
+                    if (episode.getId() ==(option)) {
+                        selectedEpisode = episode;
+                        break; // Salir del bucle una vez que se encuentra el episode.
+                    }
+                }
+        selectedEpisode.setPatient_id(patient.getId());
+        System.out.println("Episode selected:"+selectedEpisode);
         // Consultar detalles del episodio
         Episode episodeDetails = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId(), patient.getId());
         if (episodeDetails != null) {
