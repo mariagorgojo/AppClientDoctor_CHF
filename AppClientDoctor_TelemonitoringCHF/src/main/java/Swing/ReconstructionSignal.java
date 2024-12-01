@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class ReconstructionSignal {
 
-
     public static void reconstructSignal(ArrayList<Integer> data) {
         // Periodo de muestreo (en segundos)
-        double samplingFrequency = 1000; 
-        double samplingPeriod = 1.0/samplingFrequency;
+        System.out.println("Reconstructing signal with data: " + data);
+        double samplingFrequency = 1000;
+        double samplingPeriod = 1.0 / samplingFrequency;
 
         // Crear una ventana para mostrar la señal
         JFrame frame = new JFrame("Signal Reconstruction");
@@ -29,13 +29,20 @@ public class ReconstructionSignal {
                 int height = getHeight();
                 int padding = 50;
 
+                // Verificar si hay datos disponibles
+                if (data == null || data.isEmpty()) {
+                    g.setColor(Color.RED);
+                    g.drawString("No data to display", width / 2 - 50, height / 2);
+                    return; // Salir del método si no hay datos
+                }
+
                 // Calcular escala y posiciones
                 int maxDataValue = data.stream().max(Integer::compareTo).orElse(1);
                 int minDataValue = data.stream().min(Integer::compareTo).orElse(0);
                 int dataRange = maxDataValue - minDataValue;
 
                 int numPoints = data.size();
-                int pointSpacing = (width - 2 * padding) / numPoints; // Espaciado uniforme entre puntos
+                int pointSpacing = numPoints > 0 ? (width - 2 * padding) / numPoints : 0; // Manejo de espaciado
 
                 // Tiempo total basado en las muestras y el periodo
                 double totalTime = numPoints * samplingPeriod;
