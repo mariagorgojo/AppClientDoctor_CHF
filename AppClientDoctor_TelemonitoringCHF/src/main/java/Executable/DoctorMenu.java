@@ -275,21 +275,19 @@ public class DoctorMenu {
                 System.out.println("Surgeries: " + surgeries);
                 System.out.println("Symptoms: " + symptoms);
                 System.out.println("Diseases: " + diseases);
-                System.out.println("Recordings:");
+                System.out.println("Recordings: " + recordings);
 
                 System.out.println("\nSelect an id to see a specific recording:\n");
                 for (Recording rec : recordings) {
                     System.out.println("ID: " + rec.getId() + ", Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
                 }
-                Scanner scanner = new Scanner(System.in);
-
+               
                 System.out.print("Introduce el ID del recording: ");
-                String idBuscado = scanner.nextLine(); // Leer el ID introducido por el usuario.
-
+                int idBuscado = Utilities.readInteger();
                 // Buscar el recording con ese id.-> metodo en recording
                 Recording foundRecording = null;
                 for (Recording rec : recordings) {
-                    if (rec.getId().equals(idBuscado)) {
+                    if (rec.getId()==idBuscado) {
                         foundRecording = rec;
                         break; // Salir del bucle una vez que se encuentra el recording.
                     }

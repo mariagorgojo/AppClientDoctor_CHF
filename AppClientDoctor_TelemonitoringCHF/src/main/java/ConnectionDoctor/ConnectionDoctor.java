@@ -153,7 +153,7 @@ public class ConnectionDoctor {
             printWriter.println("VIEW_DOCTOR_PATIENTS");
             printWriter.println(doctorDni);
             String firstLine = bufferedReader.readLine();
-           // System.out.println(firstLine);
+            // System.out.println(firstLine);
             if (!"EMPTY".equals(firstLine)) {
 
                 String patientString = firstLine.trim();
@@ -167,7 +167,7 @@ public class ConnectionDoctor {
                         patient.setName(parts[1]);
                         patient.setSurname(parts[2]);
                         patients.add(patient);
-                      //  System.out.println(patient);
+                        //  System.out.println(patient);
                     } else {
                         System.out.println("Malformed line: " + patientString); // Debug de errores
                     }
@@ -195,7 +195,7 @@ public class ConnectionDoctor {
             String[] parts = dataString.split(",");
 
             if (parts.length == 8) {
-                patient=new Patient();
+                patient = new Patient();
                 patient.setId(Integer.parseInt(parts[0]));
                 patient.setDni(parts[1]);
                 patient.setName(parts[2]);
@@ -228,8 +228,6 @@ public class ConnectionDoctor {
         return patient;
     }
 
-
-    
     public static ArrayList<Episode> viewAllEpisodes(String patientDni) throws IOException {
         ArrayList<Episode> episodes = new ArrayList<>();
 
@@ -237,13 +235,13 @@ public class ConnectionDoctor {
             // Conectar al servidor
             connectToServer();
             System.out.println("CONECTED TO THE SERVER");
-            printWriter.println("VIEW_PATIENT_EPISODES");
+            printWriter.println("VIEW_EPISODES_DOCTOR");
             printWriter.println(patientDni); // Enviar el DNI del paciente
 
             // Leer la lista de episodios desde el servidor
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
-               // System.out.println("Data received from server: " + dataString);
+                // System.out.println("Data received from server: " + dataString);
 
                 String[] parts = dataString.split(",");
                 if (parts.length == 2) { // Validar que los datos contengan ID y Fecha
@@ -262,34 +260,33 @@ public class ConnectionDoctor {
 
             // No se debería cerrar la conexión, cerrar SOLO al final de las operaciones
             // cerrar en el menu del paciente
-            /* } finally {
+        }
+        /*finally {
             // Asegurar que la conexión al servidor se cierra
             closeConnection();
-             */
-        }
+             
+        }*/
         return episodes;
     }
-    
-    
 
     public static Episode viewPatientEpisode(int episode_id, int patient_Id) {
 
         Episode episode = new Episode();
         //    System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
 
-        List<Surgery> surgeries = new ArrayList<>();
-        List<Symptom> symptoms = new ArrayList<>();
-        List<Disease> diseases = new ArrayList<>();
-        List<Recording> recordings = new ArrayList<>();
-
         try {
             connectToServer();
-           // System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
+            // System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
 
             printWriter.println("VIEW_EPISODE_ALL_DETAILS");
+            System.out.println("SENT TO SERVER: VIEW_EPISODE_ALL_DETAILS");
             printWriter.println(String.valueOf(episode_id));
+            System.out.println("SENT TO SERVER: " + episode_id);
+
             printWriter.println(String.valueOf(patient_Id));
-           // System.out.println("Patient id. connection doctor"+ patient_Id);
+            System.out.println("SENT TO SERVER: " + patient_Id);
+
+            // System.out.println("Patient id. connection doctor"+ patient_Id);
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
                 String[] parts = dataString.split(",");
@@ -316,21 +313,22 @@ public class ConnectionDoctor {
                             break;
 
                         case "RECORDINGS": // change -> add data 
-                            System.out.println("In recordings connect patient");
+                            System.out.println("In recordings connect DOCTOR");
 
                             if (parts.length >= 3) {
                                 try {
                                     // Parsear ID
                                     int id = Integer.parseInt(parts[1]);
-
+                                     System.out.println("recording id "+ id);
                                     // Leer y asignar la ruta del archivo
                                     String signalPath = parts[2];
-
+                                      System.out.println("recording path "+signalPath);
                                     // Extraer y procesar el array de datos
                                     String rawData = parts[3]; // Datos encapsulados en [ ]
                                     rawData = rawData.substring(1, rawData.length() - 1); // Eliminar los corchetes [ ]
                                     String[] dataParts = rawData.split(","); // Separar datos por comas
                                     ArrayList<Integer> data = new ArrayList<>();
+                                    System.out.println("data: "+data);
                                     for (String dataPart : dataParts) {
                                         try {
                                             data.add(Integer.parseInt(dataPart));
@@ -345,6 +343,7 @@ public class ConnectionDoctor {
                                     recording.setSignal_path(signalPath);
                                     recording.setData(data);
                                     episode.getRecordings().add(recording);
+                                    System.out.println(recording);
 
                                 } catch (NumberFormatException e) {
                                     System.err.println("Invalid ID format in RECORDINGS: " + parts[1]);
@@ -353,22 +352,22 @@ public class ConnectionDoctor {
                                 System.err.println("Invalid RECORDINGS format: " + dataString);
                             }
                             break;
+                        default:
+                            System.err.println("Unknown detail type received: " + parts[0]);
 
                     }
-
-                    return episode;
-                } else {
-                    System.out.println("Invalid data format received: " + dataString);
-                    return null;
                 }
             }
+                    return episode;
+                
+            
 
         } catch (IOException e) {
-            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
+            System.err.println("Error retrieving episode details: " + e.getMessage());
             /* } finally {
             closeConnection(); // Cerrar la conexión al servidor
              */ }
-        return null;
+        return episode;
     }
 
 }
