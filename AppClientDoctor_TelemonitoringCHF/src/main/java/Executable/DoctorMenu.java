@@ -201,43 +201,6 @@ public class DoctorMenu {
         }
     }
 
-    /* HE CREADO OTRA DEBAJO
-    private static void viewEpisodesByPatient(Patient patient) {
-        ArrayList<Episode> episodes = patient.getEpisodes();
-
-        if (episodes.isEmpty()) {
-            System.out.println("\nNo episodes found for this patient.");
-            return;
-        } else{
-
-        System.out.println("Choose an episode to view more information");
-        
-        // Imprime la lista de episodios por fecha
-        for (int i =0; i<episodes.size(); i++){
-            System.out.println((i+1)+" Date: " +episodes.get(i).getDate());       
-        }
-        // elegir un episodio
-        int option= Utilities.getValidInput(1, episodes.size());
-        Episode selectedEpisode = episodes.get(option - 1);
-        // ver todo lo que tiene un episodio 
-        Episode episode = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId());
-        System.out.println(episode.toString());
-                
-           
-        }
-                    
-       /* while (true) {
-            int choice = Utilities.displayListWithMenu(episodes,
-                    "=== Episodes for " + patient.getName() + " ===", "Go back");
-
-            if (choice == 0) {
-                return;
-            } else {
-                Episode selectedEpisode = episodes.get(choice - 1);
-                viewRecordingsByEpisode(selectedEpisode);
-            }
-        }
-    }*/
     private static void viewEpisodesByPatient(Patient patient) throws IOException {
         ArrayList<Episode> episodes = ConnectionDoctor.viewAllEpisodes(patient.getDNI());// = patient.getEpisodes();
 

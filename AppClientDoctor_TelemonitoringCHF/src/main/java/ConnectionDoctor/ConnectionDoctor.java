@@ -205,15 +205,6 @@ public class ConnectionDoctor {
                 patient.setPhoneNumber(Integer.parseInt(parts[6])); // Convertir a entero
                 patient.setDob(LocalDate.parse(parts[7], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-                /*String[] doctorParts = patientParts[7].split(","); // Dividir directamente por comas
-
-                    Doctor doctor = new Doctor();
-                    doctor.setDni(doctorParts[0]);
-                    doctor.setName(doctorParts[1]);
-                    doctor.setSurname(doctorParts[2]);
-                    doctor.setTelephone(Integer.parseInt(doctorParts[3])); // Convertir teléfono a entero
-                    doctor.setEmail(doctorParts[4]);
-                    patient.setDoctor(doctor);*/
                 return patient;
             } else {
                 System.out.println("Invalid data format received from server.");
@@ -272,11 +263,9 @@ public class ConnectionDoctor {
     public static Episode viewPatientEpisode(int episode_id, int patient_Id) {
 
         Episode episode = new Episode();
-        //    System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
 
         try {
             connectToServer();
-            // System.out.println("Patient id. connection doctor"+ patient_Id +"EPISODE ID: "+ episode_id);
 
             printWriter.println("VIEW_EPISODE_ALL_DETAILS");
             System.out.println("SENT TO SERVER: VIEW_EPISODE_ALL_DETAILS");
@@ -286,7 +275,6 @@ public class ConnectionDoctor {
             printWriter.println(String.valueOf(patient_Id));
             System.out.println("SENT TO SERVER: " + patient_Id);
 
-            // System.out.println("Patient id. connection doctor"+ patient_Id);
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
                 String[] parts = dataString.split(",");
