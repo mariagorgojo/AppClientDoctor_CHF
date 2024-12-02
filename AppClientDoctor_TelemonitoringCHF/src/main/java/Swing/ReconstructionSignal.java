@@ -7,9 +7,16 @@ import java.util.ArrayList;
 public class ReconstructionSignal {
 
     public static void reconstructSignal(ArrayList<Integer> data) {
+        // Verificar si los datos son válidos
+         System.out.println("data en swings: ");
+        if (data == null || data.isEmpty()) {
+            System.out.println("Error: No hay datos para reconstruir la señal.");
+            return;
+        }
+
         // Periodo de muestreo (en segundos)
         System.out.println("Reconstructing signal with data: " + data);
-        double samplingFrequency = 1000;
+        double samplingFrequency = 1000; // Frecuencia de muestreo en Hz
         double samplingPeriod = 1.0 / samplingFrequency;
 
         // Crear una ventana para mostrar la señal
@@ -29,20 +36,16 @@ public class ReconstructionSignal {
                 int height = getHeight();
                 int padding = 50;
 
-                // Verificar si hay datos disponibles
-                if (data == null || data.isEmpty()) {
-                    g.setColor(Color.RED);
-                    g.drawString("No data to display", width / 2 - 50, height / 2);
-                    return; // Salir del método si no hay datos
-                }
-
                 // Calcular escala y posiciones
                 int maxDataValue = data.stream().max(Integer::compareTo).orElse(1);
                 int minDataValue = data.stream().min(Integer::compareTo).orElse(0);
                 int dataRange = maxDataValue - minDataValue;
+                if (dataRange == 0) {
+                    dataRange = 1; // Evitar división por cero
+                }
 
                 int numPoints = data.size();
-                int pointSpacing = numPoints > 0 ? (width - 2 * padding) / numPoints : 0; // Manejo de espaciado
+                int pointSpacing = numPoints > 1 ? (width - 2 * padding) / (numPoints - 1) : 0;
 
                 // Tiempo total basado en las muestras y el periodo
                 double totalTime = numPoints * samplingPeriod;
@@ -52,8 +55,7 @@ public class ReconstructionSignal {
                 g.drawLine(padding, height - padding, width - padding, height - padding); // Eje X
                 g.drawLine(padding, padding, padding, height - padding); // Eje Y
 
-                // Etiquetas de tiempo en el eje X (de segundo en segundo)
-                g.setColor(Color.BLACK);
+                // Etiquetas de tiempo en el eje X
                 int numSeconds = (int) Math.ceil(totalTime); // Tiempo total en segundos
                 for (int i = 0; i <= numSeconds; i++) {
                     int x = padding + (int) ((i / totalTime) * (width - 2 * padding)); // Escalado al ancho
@@ -83,5 +85,20 @@ public class ReconstructionSignal {
         });
 
         frame.setVisible(true);
+    }
+
+    public static ArrayList<Integer> generateTestSignal() {
+        // Genera una señal senoide para pruebas
+        ArrayList<Integer> testData = new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            testData.add((int) (50 * Math.sin(2 * Math.PI * i / 100.0)));
+        }
+        return testData;
+    }
+
+    public static void main(String[] args) {
+        // Generar señal de prueba o usar datos reales
+        ArrayList<Integer> data = generateTestSignal();
+        reconstructSignal(data);
     }
 }

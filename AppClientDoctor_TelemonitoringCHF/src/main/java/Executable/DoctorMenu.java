@@ -15,7 +15,7 @@ public class DoctorMenu {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-     try {
+        try {
             mainMenu();
             //nuevo
         } finally {
@@ -60,6 +60,8 @@ public class DoctorMenu {
         do {
             System.out.println("\nEnter DNI: ");
             dni = scanner.nextLine();
+            dni = dni.toUpperCase();
+
             if (!Utilities.validateDNI(dni)) {
                 System.out.println("Invalid DNI. Please try again.");
             }
@@ -95,6 +97,8 @@ public class DoctorMenu {
         do {
             System.out.println("\nEnter DNI: ");
             dni = scanner.nextLine();
+            dni = dni.toUpperCase();
+
             if (!Utilities.validateDNI(dni)) {
                 System.out.println("Invalid DNI format. Please try again.");
             }
@@ -176,24 +180,24 @@ public class DoctorMenu {
         // Mostrar la lista de pacientes usando el método en Utilities
         Utilities.printPatientList(patients);
 
-       // while (true) {
-            System.out.println("\nSelect a patient by number (or 0 to go back):");
-            int choice=Utilities.readInteger();
+        // while (true) {
+        System.out.println("\nSelect a patient by number (or 0 to go back):");
+        int choice = Utilities.readInteger();
 
-            if (choice == 0) {
-                return;
-            } else if (choice > 0 && choice <= patients.size()) {
-                Patient selectedPatient = patients.get(choice - 1);
-                // System.out.println(selectedPatient);
-                Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDNI());
-                //System.out.println("después \n" +patient );
+        if (choice == 0) {
+            return;
+        } else if (choice > 0 && choice <= patients.size()) {
+            Patient selectedPatient = patients.get(choice - 1);
+            // System.out.println(selectedPatient);
+            Patient patient = ConnectionDoctor.viewPatientInformation(selectedPatient.getDNI());
+            //System.out.println("después \n" +patient );
 
-                Utilities.showPatientDetails(patient);
-                // debería mandar todo (episodes)
-                viewEpisodesByPatient(patient);
-            } else {
-                System.out.println("Invalid choice. Please try again.");
-           // }
+            Utilities.showPatientDetails(patient);
+            // debería mandar todo (episodes)
+            viewEpisodesByPatient(patient);
+        } else {
+            System.out.println("Invalid choice. Please try again.");
+            // }
         }
     }
 
@@ -235,7 +239,7 @@ public class DoctorMenu {
         }
     }*/
     private static void viewEpisodesByPatient(Patient patient) throws IOException {
-        ArrayList<Episode> episodes=ConnectionDoctor.viewAllEpisodes(patient.getDNI());// = patient.getEpisodes();
+        ArrayList<Episode> episodes = ConnectionDoctor.viewAllEpisodes(patient.getDNI());// = patient.getEpisodes();
 
         if (episodes.isEmpty()) {
             System.out.println("\nNo episodes found for this patient.");
@@ -253,14 +257,14 @@ public class DoctorMenu {
         int option = Utilities.readInteger();
 
         Episode selectedEpisode = null;
-                for (Episode episode : episodes) {
-                    if (episode.getId() ==(option)) {
-                        selectedEpisode = episode;
-                        break; // Salir del bucle una vez que se encuentra el episode.
-                    }
-                }
+        for (Episode episode : episodes) {
+            if (episode.getId() == (option)) {
+                selectedEpisode = episode;
+                break; // Salir del bucle una vez que se encuentra el episode.
+            }
+        }
         selectedEpisode.setPatient_id(patient.getId());
-        System.out.println("Episode selected:"+selectedEpisode);
+        System.out.println("Episode selected:" + selectedEpisode);
         // Consultar detalles del episodio
         Episode episodeDetails = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId(), patient.getId());
         if (episodeDetails != null) {
@@ -281,21 +285,23 @@ public class DoctorMenu {
                 for (Recording rec : recordings) {
                     System.out.println("ID: " + rec.getId() + ", Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
                 }
-               
+
                 System.out.print("Introduce el ID del recording: ");
                 int idBuscado = Utilities.readInteger();
                 // Buscar el recording con ese id.-> metodo en recording
                 Recording foundRecording = null;
                 for (Recording rec : recordings) {
-                    if (rec.getId()==idBuscado) {
+                    if (rec.getId() == idBuscado) {
                         foundRecording = rec;
                         break; // Salir del bucle una vez que se encuentra el recording.
                     }
                 }
-                ArrayList<Integer> data = foundRecording.getData(); 
+                System.out.println("foundRecording: " + foundRecording);
+                ArrayList<Integer> data = foundRecording.getData();
+                System.out.println("dt: " + data);
                 // Si se encuentra el recording, mostrar los detalles.
                 if (foundRecording != null) {
-                    ReconstructionSignal.reconstructSignal(data); 
+                    ReconstructionSignal.reconstructSignal(data);
                 } else {
                     System.out.println("No se encontró un recording con ese ID.");
                 }
@@ -306,7 +312,6 @@ public class DoctorMenu {
             System.out.println("Episode details could not be retrieved.");
         }
     }
-
 
     private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
         List<Recording> recordings = episode.getRecordings();

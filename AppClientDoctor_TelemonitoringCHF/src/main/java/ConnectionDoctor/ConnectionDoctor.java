@@ -319,16 +319,20 @@ public class ConnectionDoctor {
                                 try {
                                     // Parsear ID
                                     int id = Integer.parseInt(parts[1]);
-                                     System.out.println("recording id "+ id);
+                                    System.out.println("recording id " + id);
                                     // Leer y asignar la ruta del archivo
                                     String signalPath = parts[2];
-                                      System.out.println("recording path "+signalPath);
+                                    System.out.println("recording path " + signalPath);
                                     // Extraer y procesar el array de datos
                                     String rawData = parts[3]; // Datos encapsulados en [ ]
+                                    System.out.println(" rawData sin subString: " + rawData);
+
                                     rawData = rawData.substring(1, rawData.length() - 1); // Eliminar los corchetes [ ]
+                                    System.out.println(" rawData: " + rawData);
+
                                     String[] dataParts = rawData.split(","); // Separar datos por comas
                                     ArrayList<Integer> data = new ArrayList<>();
-                                    System.out.println("data: "+data);
+                                    System.out.println("data: " + data);
                                     for (String dataPart : dataParts) {
                                         try {
                                             data.add(Integer.parseInt(dataPart));
@@ -358,9 +362,7 @@ public class ConnectionDoctor {
                     }
                 }
             }
-                    return episode;
-                
-            
+            return episode;
 
         } catch (IOException e) {
             System.err.println("Error retrieving episode details: " + e.getMessage());

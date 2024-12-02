@@ -20,18 +20,20 @@ public class Utilities {
         int num = 0;
         boolean ok = false;
         do {
+            System.out.println("Introduce a number: ");
+
             try {
                 num = Integer.parseInt(r.readLine());
                 if (num < 0) {
                     ok = false;
-                    System.out.print("You didn't type a valid number.");
+                    System.out.println("You didn't type a valid number.");
                 } else {
                     ok = true;
                 }
             } catch (IOException e) {
                 e.getMessage();
             } catch (NumberFormatException nfe) {
-                System.out.print("You didn't type a valid number!");
+                System.out.println("You didn't type a valid number!");
             }
         } while (!ok);
 
