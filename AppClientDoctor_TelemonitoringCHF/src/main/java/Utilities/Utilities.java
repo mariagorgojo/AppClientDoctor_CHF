@@ -132,7 +132,7 @@ public class Utilities {
             System.out.printf("%d. %s\n", i + 1, options[i]);
         }
         System.out.println("Choose an option: ");
-        return getValidInput(0, options.length - 1);
+        return getValidInput(0, options.length );
     }
 
     // Method to display a list of objects with a menu
@@ -142,7 +142,7 @@ public class Utilities {
             System.out.printf("%d. %s\n", i + 1, list.get(i).toString());
         }
         System.out.println("0. " + backOption);
-        System.out.print("Choose an option: ");
+        System.out.println("Choose an option: ");
         return getValidInput(0, list.size());
     }
 
@@ -158,7 +158,7 @@ public class Utilities {
             } catch (IOException | NumberFormatException e) {
                 // Ignore and prompt again
             }
-            System.out.print("Invalid input. Please try again: ");
+            System.out.println("Invalid input. Please try again: ");
         }
 
     }

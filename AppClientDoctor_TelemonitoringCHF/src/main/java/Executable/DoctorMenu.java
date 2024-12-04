@@ -42,8 +42,9 @@ public class DoctorMenu {
                     loginMenu();
                     break;
                 case 0:
+                    ConnectionDoctor.closeConnection();
                     System.out.println("Exiting...");
-                    return;
+                    break;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
@@ -159,7 +160,9 @@ public class DoctorMenu {
                     viewPatientsMenu(doctorDni);
                     break;
                 case 3:
+                    ConnectionDoctor.closeConnection();
                     System.out.println("Logging out...");
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Invalid option. Please try again.");
