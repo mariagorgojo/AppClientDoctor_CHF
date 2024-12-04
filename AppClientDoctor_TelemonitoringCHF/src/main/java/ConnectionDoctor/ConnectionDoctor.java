@@ -47,10 +47,9 @@ public class ConnectionDoctor {
 
     public static void closeConnection() {
         try {
-            
-                printWriter.println("LOGOUT");
-            
-            
+
+            printWriter.println("LOGOUT");
+
             if (printWriter != null) {
                 printWriter.close();
             }
@@ -119,7 +118,7 @@ public class ConnectionDoctor {
 
     public static Doctor viewDoctorDetails(String doctorDni) {
         try {
-         //   connectToServer();
+            //   connectToServer();
             printWriter.println("VIEW_DOCTOR_DETAILS");
             printWriter.println(doctorDni);
 
@@ -190,7 +189,7 @@ public class ConnectionDoctor {
     public static Patient viewPatientInformation(String dni) throws IOException {
         Patient patient = null;
         try {
-           // connectToServer();
+            // connectToServer();
             // System.out.println("conecta con el server");
             printWriter.println("VIEW_PATIENT_INFORMATION");
             printWriter.println(dni);
@@ -228,7 +227,7 @@ public class ConnectionDoctor {
 
         try {
             // Conectar al servidor
-           // connectToServer();
+            // connectToServer();
             System.out.println("CONECTED TO THE SERVER");
             printWriter.println("VIEW_EPISODES_DOCTOR");
             printWriter.println(patientDni); // Enviar el DNI del paciente
@@ -269,7 +268,7 @@ public class ConnectionDoctor {
         Episode episode = new Episode();
 
         try {
-           // connectToServer();
+            // connectToServer();
 
             printWriter.println("VIEW_EPISODE_ALL_DETAILS");
             System.out.println("SENT TO SERVER: VIEW_EPISODE_ALL_DETAILS");
