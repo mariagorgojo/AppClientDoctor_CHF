@@ -7,78 +7,79 @@ import java.util.ArrayList;
 public class ReconstructionSignal {
 
     public static void reconstructSignal(ArrayList<Integer> data) {
-        // Verificar si los datos son válidos
-         System.out.println("data en swings: ");
         if (data == null || data.isEmpty()) {
             System.out.println("Error: No hay datos para reconstruir la señal.");
             return;
         }
-
-        // Periodo de muestreo (en segundos)
-        System.out.println("Reconstructing signal with data: " + data);
-        double samplingFrequency = 1000; // Frecuencia de muestreo en Hz
-        double samplingPeriod = 1.0 / samplingFrequency;
 
         // Crear una ventana para mostrar la señal
         JFrame frame = new JFrame("Signal Reconstruction");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
-        // Agregar un panel para dibujar la señal
         frame.add(new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
-                // Configuración básica del gráfico
+                // Configuración básica
                 g.setColor(Color.BLUE);
                 int width = getWidth();
                 int height = getHeight();
                 int padding = 50;
 
-                // Calcular escala y posiciones
+                // Parámetros para la visualización
+                double samplingFrequency = 1000.0; // Frecuencia de muestreo (Hz)
+                int pointsToDisplay = 100; // Mostrar solo los primeros 1,000 datos (1 segundo)
+                if (pointsToDisplay > data.size()) {
+                    pointsToDisplay = data.size(); // Ajustar si hay menos datos disponibles
+                }
+
+                // Rango de los datos (convertir a microvoltios)
                 int maxDataValue = data.stream().max(Integer::compareTo).orElse(1);
                 int minDataValue = data.stream().min(Integer::compareTo).orElse(0);
                 int dataRange = maxDataValue - minDataValue;
                 if (dataRange == 0) {
-                    dataRange = 1; // Evitar división por cero
+                    dataRange = 1;
                 }
 
-                int numPoints = data.size();
-                int pointSpacing = numPoints > 1 ? (width - 2 * padding) / (numPoints - 1) : 0;
-
-                // Tiempo total basado en las muestras y el periodo
-                double totalTime = numPoints * samplingPeriod;
+                // Escalar eje X (tiempo) y eje Y (microvoltios)
+                double totalTime = pointsToDisplay / samplingFrequency; // Tiempo total de la ventana (segundos)
+                double xScale = (width - 2.0 * padding) / totalTime; // Pixels por segundo
+                double yScale = (height - 2.0 * padding) / dataRange; // Pixels por microvoltio
 
                 // Dibujar ejes
                 g.setColor(Color.BLACK);
                 g.drawLine(padding, height - padding, width - padding, height - padding); // Eje X
                 g.drawLine(padding, padding, padding, height - padding); // Eje Y
 
-                // Etiquetas de tiempo en el eje X
-                int numSeconds = (int) Math.ceil(totalTime); // Tiempo total en segundos
-                for (int i = 0; i <= numSeconds; i++) {
-                    int x = padding + (int) ((i / totalTime) * (width - 2 * padding)); // Escalado al ancho
-                    g.drawString(String.valueOf(i), x, height - padding + 20); // Etiqueta de tiempo
-                    g.drawLine(x, height - padding - 5, x, height - padding + 5); // Marca en el eje
+                // Etiquetas en el eje X (tiempo en segundos, de 0.01 en 0.01)
+                g.setColor(Color.BLACK);
+                for (double t = 0; t <= totalTime; t += 0.1) { // Etiquetas cada 0.1 segundos
+                    int x = padding + (int) (t * xScale);
+                    g.drawString(String.format("%.1f", t), x - 10, height - padding + 20);
+                    g.drawLine(x, height - padding - 5, x, height - padding + 5); // Marcas del eje
                 }
 
-                // Etiquetas de amplitud en el eje Y
-                int numYLabels = 5; // Número de etiquetas en el eje Y
-                for (int i = 0; i <= numYLabels; i++) {
-                    int y = height - padding - i * (height - 2 * padding) / numYLabels;
-                    int value = minDataValue + i * dataRange / numYLabels; // Valores escalados
-                    g.drawString(String.valueOf(value), padding - 30, y + 5); // Etiqueta en el eje Y
-                    g.drawLine(padding - 5, y, padding + 5, y); // Marca en el eje
+                // Etiquetas en el eje Y (en microvoltios)
+                for (int i = 0; i <= 5; i++) {
+                    int y = height - padding - i * (height - 2 * padding) / 5;
+                    int value = minDataValue + i * dataRange / 5;
+                    g.drawString(String.valueOf(value) + " µV", padding - 40, y + 5);
+                    g.drawLine(padding - 5, y, padding + 5, y);
                 }
 
-                // Dibujar la señal
+                // Dibujar la señal (primeros 1,000 puntos)
                 g.setColor(Color.BLUE);
-                for (int i = 0; i < data.size() - 1; i++) {
-                    int x1 = padding + i * pointSpacing;
-                    int y1 = height - padding - (data.get(i) - minDataValue) * (height - 2 * padding) / dataRange;
-                    int x2 = padding + (i + 1) * pointSpacing;
-                    int y2 = height - padding - (data.get(i + 1) - minDataValue) * (height - 2 * padding) / dataRange;
+                for (int i = 0; i < pointsToDisplay - 1; i++) {
+                    double t1 = i / samplingFrequency;
+                    double t2 = (i + 1) / samplingFrequency;
+
+                    int x1 = padding + (int) (t1 * xScale);
+                    int y1 = height - padding - (int) ((data.get(i) - minDataValue) * yScale);
+                    int x2 = padding + (int) (t2 * xScale);
+                    int y2 = height - padding - (int) ((data.get(i + 1) - minDataValue) * yScale);
+
                     g.drawLine(x1, y1, x2, y2);
                 }
             }
@@ -88,16 +89,25 @@ public class ReconstructionSignal {
     }
 
     public static ArrayList<Integer> generateTestSignal() {
-        // Genera una señal senoide para pruebas
+        // Generar señal de prueba con 60,000 datos
         ArrayList<Integer> testData = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            testData.add((int) (50 * Math.sin(2 * Math.PI * i / 100.0)));
+        double frequency = 1.0; // Frecuencia del ECG (Hz)
+        double samplingFrequency = 1000.0; // Frecuencia de muestreo (Hz)
+        int numSamples = 60000; // Número de muestras
+
+        for (int i = 0; i < numSamples; i++) {
+            double time = i / samplingFrequency;
+            double ecgSignal = 100 * Math.sin(2 * Math.PI * frequency * time); // Señal senoidal base
+            if (i % 1000 < 50) {
+                ecgSignal += 150; // Simular un pico QRS
+            }
+            testData.add((int) ecgSignal);
         }
+
         return testData;
     }
 
     public static void main(String[] args) {
-        // Generar señal de prueba o usar datos reales
         ArrayList<Integer> data = generateTestSignal();
         reconstructSignal(data);
     }

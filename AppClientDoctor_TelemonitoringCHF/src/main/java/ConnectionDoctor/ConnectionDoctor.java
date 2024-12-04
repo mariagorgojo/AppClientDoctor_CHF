@@ -121,7 +121,7 @@ public class ConnectionDoctor {
 
             String doctorString = bufferedReader.readLine();
 
-            String[] parts = doctorString.split(",");
+            String[] parts = doctorString.split(";");
 
             if (parts.length == 5) {
                 Doctor doctor = new Doctor();
@@ -158,7 +158,7 @@ public class ConnectionDoctor {
 
                 String patientString = firstLine.trim();
                 while (!(patientString.equals("END_OF_LIST"))) {
-                    String[] parts = patientString.split(",");
+                    String[] parts = patientString.split(";");
                     //System.out.println("Reading patients");
                     if (parts.length == 3) { // Asegurar formato correcto
 
@@ -192,7 +192,7 @@ public class ConnectionDoctor {
             printWriter.println(dni);
 
             String dataString = bufferedReader.readLine();
-            String[] parts = dataString.split(",");
+            String[] parts = dataString.split(";");
 
             if (parts.length == 8) {
                 patient = new Patient();
@@ -234,7 +234,7 @@ public class ConnectionDoctor {
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
                 // System.out.println("Data received from server: " + dataString);
 
-                String[] parts = dataString.split(",");
+                String[] parts = dataString.split(";");
                 if (parts.length == 2) { // Validar que los datos contengan ID y Fecha
                     Episode episode = new Episode();
                     episode.setId(Integer.parseInt(parts[0])); // ID del episodio
@@ -277,7 +277,7 @@ public class ConnectionDoctor {
 
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
-                String[] parts = dataString.split(",");
+                String[] parts = dataString.split(";");
 
                 if (parts.length >= 2) {
 
