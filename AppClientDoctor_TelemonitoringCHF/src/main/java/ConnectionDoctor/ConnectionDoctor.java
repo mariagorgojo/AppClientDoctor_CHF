@@ -117,6 +117,8 @@ public class ConnectionDoctor {
     }
 
     public static Doctor viewDoctorDetails(String doctorDni) {
+        Doctor doctor = null;
+
         try {
             //   connectToServer();
             printWriter.println("VIEW_DOCTOR_DETAILS");
@@ -127,7 +129,7 @@ public class ConnectionDoctor {
             String[] parts = doctorString.split(";");
 
             if (parts.length == 5) {
-                Doctor doctor = new Doctor();
+                doctor = new Doctor();
                 doctor.setDni(parts[0]);
                 doctor.setName(parts[1]);
                 doctor.setSurname(parts[2]);

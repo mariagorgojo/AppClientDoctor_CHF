@@ -89,12 +89,15 @@ public class DoctorMenu {
                 System.out.println("\nDoctor login successful!");
                 // loginSuccess = true; 
                 doctorMenu(dni); // Redirige al menú del doctor
+            } else {
+                System.out.println("ERROR. Make sure you entered your DNI and password correctly.");
+                System.out.println("If you're not registered, please do it first. \n");
+                mainMenu();
             }
 
         } catch (Exception e) {
-            System.out.println("ERROR. Make sure you entered your DNI and password correctly.");
-            System.out.println("If you're not registered, please do it first. \n");
-            //loginSuccess = true; 
+            System.out.println("An unexpected error occurred. Please try again.");
+
             mainMenu();
             //System.out.println(e);
 
