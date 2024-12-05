@@ -17,48 +17,47 @@ public class DoctorMenu {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        String ip_address_valid = null;
         try {
-            mainMenu();
-            //nuevo
+                    
+            ip_address_valid = Utilities.getValidIPAddress();
+            try {
+                ConnectionDoctor.connectToServer(ip_address_valid);
+            } catch (IOException ex) {
+                Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             mainMenu();
         } finally {
             ConnectionDoctor.closeConnection(); // Cierra la conexión al finalizar
         }
     }
 
     private static void mainMenu() {
-        try {
-            System.out.println("\n-- Welcome to the Doctor App --");
-            String ip_address_valid = null;
+        System.out.println("\n-- Welcome to the Doctor App --");
+        while (true) {
             
-            ip_address_valid = Utilities.getValidIPAddress();
-            ConnectionDoctor.connectToServer(ip_address_valid);
-            while (true) {
-              
-                    System.out.println("1. Register");
-                    System.out.println("2. Log in");
-                    System.out.println("0. Exit");
-                    System.out.println("\nPlease select an option to get started: ");
-                    
-                    int choice = scanner.nextInt();
-                    scanner.nextLine();
-                    switch (choice) {
-                        case 1:
-                            registerDoctor();
-                            break;
-                        case 2:
-                            loginMenu();
-                            break;
-                        case 0:
-                            ConnectionDoctor.closeConnection();
-                            System.out.println("Exiting...");
-                            break;
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                    }
-                
+            System.out.println("1. Register");
+            System.out.println("2. Log in");
+            System.out.println("0. Exit");
+            System.out.println("\nPlease select an option to get started: ");
+            
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    registerDoctor();
+                    break;
+                case 2:
+                    loginMenu();
+                    break;
+                case 0:
+                    ConnectionDoctor.closeConnection();
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
-        } catch (IOException ex) {
-            Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
@@ -146,7 +145,7 @@ public class DoctorMenu {
         try {
             if (ConnectionDoctor.sendRegisterServer(doctor)) {
                 System.out.println("User registered successfully with DNI: " + dni);
-                mainMenu();
+                loginMenu();
             } else {
                 System.out.println("DNI : " + dni + " is already registered. Try to login to access your account.");
                 mainMenu(); // redirigir
