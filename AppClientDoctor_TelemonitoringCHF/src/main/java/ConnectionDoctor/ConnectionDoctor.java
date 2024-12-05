@@ -64,12 +64,12 @@ public class ConnectionDoctor {
         }
     }
 
-    public static boolean sendRegisterServer(Doctor doctor) {
+    public static boolean sendRegisterServer(Doctor doctor, String encryptedPassword) {
         try {
            // connectToServer(ip_address);
             printWriter.println("REGISTER_DOCTOR");
             printWriter.println(doctor.getDni());
-            printWriter.println(doctor.getPassword());
+            printWriter.println(encryptedPassword);
             printWriter.println(doctor.getName());
             printWriter.println(doctor.getSurname());
             printWriter.println(doctor.getTelephone().toString());

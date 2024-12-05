@@ -2,6 +2,7 @@ package Executable;
 
 import java.util.Scanner;
 import Utilities.Utilities;
+import Utilities.Encryption;
 import pojos.Doctor;
 import ConnectionDoctor.*;
 import Swing.ReconstructionSignal;
@@ -81,10 +82,11 @@ public class DoctorMenu {
         // Solicita la contraseña
         System.out.println("Enter password: ");
         password = scanner.nextLine();
+        String encryptedPassword = Encryption.encryptPasswordMD5(password);
 
         try {
             // Valida login
-            if (ConnectionDoctor.validateLogin(dni, password)) {
+            if (ConnectionDoctor.validateLogin(dni, encryptedPassword)) {
                 System.out.println("\nDoctor login successful!");
                 // loginSuccess = true; 
                 doctorMenu(dni); // Redirige al menú del doctor
@@ -120,7 +122,9 @@ public class DoctorMenu {
 
         System.out.println("Create password: ");
         String password = scanner.nextLine();
-
+        String encryptedPassword = Encryption.encryptPasswordMD5(password);
+ 
+        
         System.out.println("First name: ");
         String name = scanner.nextLine();
 
@@ -143,7 +147,7 @@ public class DoctorMenu {
         Doctor doctor = new Doctor(dni, password, name, surname, telephone, email);
 
         try {
-            if (ConnectionDoctor.sendRegisterServer(doctor)) {
+            if (ConnectionDoctor.sendRegisterServer(doctor, encryptedPassword)) {
                 System.out.println("User registered successfully with DNI: " + dni);
                 loginMenu();
             } else {
