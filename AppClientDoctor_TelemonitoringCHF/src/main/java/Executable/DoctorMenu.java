@@ -144,7 +144,7 @@ public class DoctorMenu {
             }
         } while (!Utilities.validateEmail(email));
 
-        Doctor doctor = new Doctor(dni, password, name, surname, telephone, email);
+        Doctor doctor = new Doctor(dni, encryptedPassword, name, surname, telephone, email);
 
         try {
             if (ConnectionDoctor.sendRegisterServer(doctor, encryptedPassword)) {
