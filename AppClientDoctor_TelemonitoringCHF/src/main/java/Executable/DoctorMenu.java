@@ -8,6 +8,8 @@ import Swing.ReconstructionSignal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pojos.*;
 
 public class DoctorMenu {
@@ -24,30 +26,39 @@ public class DoctorMenu {
     }
 
     private static void mainMenu() {
-        System.out.println("\n-- Welcome to the Doctor App --");
-
-        while (true) {
-            System.out.println("1. Register");
-            System.out.println("2. Log in");
-            System.out.println("0. Exit");
-            System.out.println("\nPlease select an option to get started: ");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            switch (choice) {
-                case 1:
-                    registerDoctor();
-                    break;
-                case 2:
-                    loginMenu();
-                    break;
-                case 0:
-                    ConnectionDoctor.closeConnection();
-                    System.out.println("Exiting...");
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+        try {
+            System.out.println("\n-- Welcome to the Doctor App --");
+            String ip_address_valid = null;
+            
+            ip_address_valid = Utilities.getValidIPAddress();
+            ConnectionDoctor.connectToServer(ip_address_valid);
+            while (true) {
+              
+                    System.out.println("1. Register");
+                    System.out.println("2. Log in");
+                    System.out.println("0. Exit");
+                    System.out.println("\nPlease select an option to get started: ");
+                    
+                    int choice = scanner.nextInt();
+                    scanner.nextLine();
+                    switch (choice) {
+                        case 1:
+                            registerDoctor();
+                            break;
+                        case 2:
+                            loginMenu();
+                            break;
+                        case 0:
+                            ConnectionDoctor.closeConnection();
+                            System.out.println("Exiting...");
+                            break;
+                        default:
+                            System.out.println("Invalid option. Please try again.");
+                    }
+                
             }
+        } catch (IOException ex) {
+            Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -130,7 +141,7 @@ public class DoctorMenu {
         Doctor doctor = new Doctor(dni, password, name, surname, telephone, email);
 
         try {
-            if (ConnectionDoctor.sendRegisterServer(doctor, password)) {
+            if (ConnectionDoctor.sendRegisterServer(doctor)) {
                 System.out.println("User registered successfully with DNI: " + dni);
                 mainMenu();
             } else {

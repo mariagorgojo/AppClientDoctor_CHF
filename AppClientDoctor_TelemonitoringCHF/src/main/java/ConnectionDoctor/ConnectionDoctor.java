@@ -36,10 +36,10 @@ public class ConnectionDoctor {
     private static PrintWriter printWriter;
     private static BufferedReader bufferedReader;
 
-    private static void connectToServer() throws IOException {
+    public static void connectToServer(String ip_address) throws IOException {
         if (socket == null || socket.isClosed()) {
             System.out.println("Connecting to server...");
-            socket = new Socket("localhost", 9090); // cambiar mas adelante 
+            socket = new Socket(ip_address, 9090); // cambiar mas adelante 
             printWriter = new PrintWriter(socket.getOutputStream(), true);
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
@@ -64,9 +64,9 @@ public class ConnectionDoctor {
         }
     }
 
-    public static boolean sendRegisterServer(Doctor doctor, String password) {
+    public static boolean sendRegisterServer(Doctor doctor) {
         try {
-            connectToServer();
+           // connectToServer(ip_address);
             printWriter.println("REGISTER_DOCTOR");
             printWriter.println(doctor.getDni());
             printWriter.println(doctor.getPassword());
@@ -92,7 +92,7 @@ public class ConnectionDoctor {
 
     public static boolean validateLogin(String dni, String password) {
         try {
-            connectToServer();
+           // connectToServer(ip_address);
             printWriter.println("LOGIN_DOCTOR");
             printWriter.println(dni);
             printWriter.println(password);
