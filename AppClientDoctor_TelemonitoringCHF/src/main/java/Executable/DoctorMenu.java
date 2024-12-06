@@ -2,12 +2,15 @@ package Executable;
 
 import java.util.Scanner;
 import Utilities.Utilities;
+import Utilities.Encryption;
 import pojos.Doctor;
 import ConnectionDoctor.*;
 import Swing.ReconstructionSignal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pojos.*;
 
 public class DoctorMenu {
@@ -15,9 +18,16 @@ public class DoctorMenu {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        String ip_address_valid = null;
         try {
-            mainMenu();
-            //nuevo
+                    
+            ip_address_valid = Utilities.getValidIPAddress();
+            try {
+                ConnectionDoctor.connectToServer(ip_address_valid);
+            } catch (IOException ex) {
+                Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             mainMenu();
         } finally {
             ConnectionDoctor.closeConnection(); // Cierra la conexión al finalizar
         }
@@ -25,13 +35,13 @@ public class DoctorMenu {
 
     private static void mainMenu() {
         System.out.println("\n-- Welcome to the Doctor App --");
-
         while (true) {
+            
             System.out.println("1. Register");
             System.out.println("2. Log in");
             System.out.println("0. Exit");
             System.out.println("\nPlease select an option to get started: ");
-
+            
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -44,10 +54,11 @@ public class DoctorMenu {
                 case 0:
                     ConnectionDoctor.closeConnection();
                     System.out.println("Exiting...");
-                    break;
+                    return;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
+
         }
     }
 
@@ -71,19 +82,23 @@ public class DoctorMenu {
         // Solicita la contraseña
         System.out.println("Enter password: ");
         password = scanner.nextLine();
+        String encryptedPassword = Encryption.encryptPasswordMD5(password);
 
         try {
             // Valida login
-            if (ConnectionDoctor.validateLogin(dni, password)) {
+            if (ConnectionDoctor.validateLogin(dni, encryptedPassword)) {
                 System.out.println("\nDoctor login successful!");
                 // loginSuccess = true; 
                 doctorMenu(dni); // Redirige al menú del doctor
+            } else {
+                System.out.println("ERROR. Make sure you entered your DNI and password correctly.");
+                System.out.println("If you're not registered, please do it first. \n");
+                mainMenu();
             }
 
         } catch (Exception e) {
-            System.out.println("ERROR. Make sure you entered your DNI and password correctly.");
-            System.out.println("If you're not registered, please do it first. \n");
-            //loginSuccess = true; 
+            System.out.println("An unexpected error occurred. Please try again.");
+
             mainMenu();
             //System.out.println(e);
 
@@ -107,7 +122,9 @@ public class DoctorMenu {
 
         System.out.println("Create password: ");
         String password = scanner.nextLine();
-
+        String encryptedPassword = Encryption.encryptPasswordMD5(password);
+ 
+        
         System.out.println("First name: ");
         String name = scanner.nextLine();
 
@@ -127,12 +144,12 @@ public class DoctorMenu {
             }
         } while (!Utilities.validateEmail(email));
 
-        Doctor doctor = new Doctor(dni, password, name, surname, telephone, email);
+        Doctor doctor = new Doctor(dni, encryptedPassword, name, surname, telephone, email);
 
         try {
-            if (ConnectionDoctor.sendRegisterServer(doctor, password)) {
+            if (ConnectionDoctor.sendRegisterServer(doctor, encryptedPassword)) {
                 System.out.println("User registered successfully with DNI: " + dni);
-                mainMenu();
+                loginMenu();
             } else {
                 System.out.println("DNI : " + dni + " is already registered. Try to login to access your account.");
                 mainMenu(); // redirigir
