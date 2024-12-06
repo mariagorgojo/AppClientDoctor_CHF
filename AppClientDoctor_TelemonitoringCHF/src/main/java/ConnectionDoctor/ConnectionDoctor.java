@@ -66,7 +66,7 @@ public class ConnectionDoctor {
 
     public static boolean sendRegisterServer(Doctor doctor, String encryptedPassword) {
         try {
-           // connectToServer(ip_address);
+            // connectToServer(ip_address);
             printWriter.println("REGISTER_DOCTOR");
             printWriter.println(doctor.getDni());
             printWriter.println(encryptedPassword);
@@ -92,7 +92,7 @@ public class ConnectionDoctor {
 
     public static boolean validateLogin(String dni, String password) {
         try {
-           // connectToServer(ip_address);
+            // connectToServer(ip_address);
             printWriter.println("LOGIN_DOCTOR");
             printWriter.println(dni);
             printWriter.println(password);
@@ -365,7 +365,82 @@ public class ConnectionDoctor {
         return episode;
     }
 
+    public static List<Disease> getAvailableDiseases() {
+        List<Disease> diseases = new ArrayList<>();
+
+        try {
+            // connectToServer(); // Establecer conexión con el servidor
+
+            printWriter.println("AVAILABLE_DISEASES"); // Comando para el servidor
+            printWriter.flush();
+
+            String diseaseData;
+            while (!(diseaseData = bufferedReader.readLine()).equals("END_OF_LIST")) {
+                Disease disease = new Disease();
+                disease.setDisease(diseaseData);
+                diseases.add(disease);
+            }
+        } catch (IOException e) {
+            System.err.println("Error retrieving diseases: " + e.getMessage());
+        }
+        /*finally {
+            closeConnection(); // Cerrar la conexión al servidor
+        }*/
+
+        return diseases;
+    }
+
+    public static List<Surgery> getAvailableSurgeries() {
+        List<Surgery> surgeries = new ArrayList<>();
+
+        try {
+            //  connectToServer(); // Establecer conexión con el servidor
+
+            printWriter.println("AVAILABLE_SURGERIES"); // Comando para el servidor
+            printWriter.flush();
+            String surgeryData;
+            while (!(surgeryData = bufferedReader.readLine()).equals("END_OF_LIST")) {
+                Surgery surgery = new Surgery();
+                surgery.setSurgery(surgeryData);
+                surgeries.add(surgery);
+            }
+        } catch (IOException e) {
+            System.err.println("Error retrieving surgeries: " + e.getMessage());
+        }
+        /*finally {
+            closeConnection(); // Cerrar la conexión al servidor
+        }*/
+
+        return surgeries;
+    }
+
+    public static boolean updateEpisode(Episode episode, List<String> diseases, List<String> surgeries) {
+        try {
+            printWriter.println("INSERT_EPISODE"); 
+            printWriter.println("UPDATE_EPISODE");
+            int episodeId = episode.getId();                 
+            printWriter.println(episodeId);
+
+            for (String disease : diseases) {
+                printWriter.println("DISEASE|" + disease);
+            }
+
+            for (String surgery : surgeries) {
+                printWriter.println("SURGERY|" + surgery);
+            }
+
+            printWriter.println("END_OF_UPDATE");
+            printWriter.flush();
+
+            String response = bufferedReader.readLine();
+            return "SUCCESS".equals(response);
+        } catch (IOException e) {
+            System.err.println("Error al actualizar el episodio: " + e.getMessage());
+            return false;
+        }
+    }
 }
+
 // no borrar
 /* public static void main(String[] args) throws IOException {
 
