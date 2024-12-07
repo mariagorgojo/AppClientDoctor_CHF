@@ -222,7 +222,6 @@ public class DoctorMenu {
 
     private static void viewEpisodesByPatient(Patient patient) throws IOException {
         ArrayList<Episode> episodes = ConnectionDoctor.viewAllEpisodes(patient.getDNI());// = patient.getEpisodes();
-
         if (episodes.isEmpty()) {
             System.out.println("\nNo episodes found for this patient.");
             return;
@@ -289,7 +288,19 @@ public class DoctorMenu {
                         System.out.println("No se encontró un recording con ese ID.");
                     }
                 }
-                insertEpisodeFeedback(selectedEpisode);
+                boolean res = true;
+                do {
+                    System.out.println("Do you want to give feedback about diseases or surgeries? Type yes/no");
+                    String feedback = scanner.nextLine().toUpperCase();
+                    if (feedback.equals("YES")) {
+                        insertEpisodeFeedback(selectedEpisode);
+                    } else if (feedback.equals("NO")) {
+                        System.out.println(" ");
+                    } else {
+                        System.out.println("not valid answer, type yes or no");
+                        res = false;
+                    }
+                } while (res = false);
             } else {
                 System.out.println("There is nothing inserted in episode ID: " + selectedEpisode.getId());
             }
@@ -309,6 +320,7 @@ public class DoctorMenu {
         } else {
             System.err.println("Failed to insert episode. Please try again.");
         }
+
     }
 
     private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
