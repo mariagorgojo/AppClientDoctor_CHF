@@ -44,8 +44,7 @@ public class DoctorMenu {
             System.out.println("0. Exit");
             System.out.println("\nPlease select an option to get started: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = Utilities.readInteger();
             switch (choice) {
                 case 1:
                     registerDoctor();
@@ -73,7 +72,7 @@ public class DoctorMenu {
         // Solicita el DNI y valida el formato
         do {
             System.out.println("\nEnter DNI: ");
-            dni = scanner.nextLine();
+            dni = Utilities.readString();
             dni = dni.toUpperCase();
 
             if (!Utilities.validateDNI(dni)) {
@@ -83,7 +82,7 @@ public class DoctorMenu {
 
         // Solicita la contraseña
         System.out.println("Enter password: ");
-        password = scanner.nextLine();
+         password= Utilities.readString();
         String encryptedPassword = Encryption.encryptPasswordMD5(password);
 
         try {
@@ -114,7 +113,7 @@ public class DoctorMenu {
         String dni;
         do {
             System.out.println("\nEnter DNI: ");
-            dni = scanner.nextLine();
+            dni = Utilities.readString();
             dni = dni.toUpperCase();
 
             if (!Utilities.validateDNI(dni)) {
@@ -123,23 +122,23 @@ public class DoctorMenu {
         } while (!Utilities.validateDNI(dni));
 
         System.out.println("Create password: ");
-        String password = scanner.nextLine();
+        String password = Utilities.readString();
         String encryptedPassword = Encryption.encryptPasswordMD5(password);
 
         System.out.println("First name: ");
-        String name = scanner.nextLine();
+        String name = Utilities.readString();
 
         System.out.println("Last name: ");
-        String surname = scanner.nextLine();
+        String surname = Utilities.readString();
 
         System.out.println("Phone: ");
-        Integer telephone = scanner.nextInt();
-        scanner.nextLine();
+        Integer telephone = Utilities.readInteger();
+       
 
         String email;
         do {
             System.out.println("Email: ");
-            email = scanner.nextLine();
+            email = Utilities.readString();
             if (!Utilities.validateEmail(email)) {
                 System.out.println("Invalid email. Please try again.");
             }
@@ -300,7 +299,7 @@ public class DoctorMenu {
                 boolean res = true;
                 do {
                     System.out.println("Do you want to give feedback about diseases or surgeries? Type yes/no");
-                    String feedback = scanner.nextLine().toUpperCase();
+                    String feedback = Utilities.readString().toUpperCase();
                     if (feedback.equals("YES")) {
                         insertEpisodeFeedback(selectedEpisode);
                     } else if (feedback.equals("NO")) {
@@ -381,7 +380,7 @@ public class DoctorMenu {
                 }
             } else if (option == availableDiseases.size() + 1) {
                 System.out.println("Enter new Disease: ");
-                String newDisease = scanner.nextLine();
+                String newDisease = Utilities.readString();;
                 selectedDiseases.add(newDisease);
                 System.out.println("Disease \"" + newDisease + "\" added.");
             } else if (option != availableDiseases.size() + 2) {
@@ -420,7 +419,7 @@ public class DoctorMenu {
                 }
             } else if (option == availableSurgeries.size() + 1) {
                 System.out.println("Enter new Surgery: ");
-                String newSurgery = scanner.nextLine();
+                String newSurgery = Utilities.readString();;
                 selectedSurgeries.add(newSurgery);
                 System.out.println("Surgery \"" + newSurgery + "\" added.");
             } else if (option != availableSurgeries.size() + 2) {

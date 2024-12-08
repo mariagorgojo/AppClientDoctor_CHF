@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import pojos.Doctor;
@@ -166,7 +167,20 @@ public class Utilities {
     }
 
     public static void showPatientDetails(Patient patient) {
-        System.out.println(patient.toString());
+          System.out.println("\nPatient Details:");
+        System.out.println("DNI: " + patient.getDNI());
+        System.out.println("Name: " + patient.getName());
+        System.out.println("Surname: " + patient.getSurname());
+        System.out.println("Date of Birth: " + patient.getDob());
+        System.out.println("Gender: " + patient.getGender());
+        System.out.println("Telephone: " + patient.getPhoneNumber());
+        System.out.println("Email: " + patient.getEmail());
+        ArrayList prevDiseases=patient.getPreviousDiseases();
+        if (!prevDiseases.isEmpty()){
+        System.out.println("Previous Diseases: " + patient.getPreviousDiseases());
+        } else{
+            System.out.println("The patient did not register any previous diseases");
+        }
 
     }
 

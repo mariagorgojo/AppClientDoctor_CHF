@@ -190,15 +190,28 @@ public class ConnectionDoctor {
 
     public static Patient viewPatientInformation(String dni) throws IOException {
         Patient patient = null;
+        ArrayList<Disease> previousDiseases = new ArrayList<>();
+
         try {
             // connectToServer();
             // System.out.println("conecta con el server");
             printWriter.println("VIEW_PATIENT_INFORMATION");
             printWriter.println(dni);
 
-            String dataString = bufferedReader.readLine();
-            String[] parts = dataString.split(";");
+            String dataString;
+            while (!((dataString = bufferedReader.readLine()).equals("END_OF_DISEASES"))) {
+                String[] partsDisease = dataString.split(";");
 
+                if (partsDisease.length >= 2 && partsDisease[0].equals("DISEASES")) {
+
+                    Disease disease = new Disease();
+                    disease.setDisease(partsDisease[1]);
+                    previousDiseases.add(disease);
+
+                }
+            }
+            dataString = bufferedReader.readLine(); // Read line that contains patient data
+            String[] parts = dataString.split(";");
             if (parts.length == 8) {
                 patient = new Patient();
                 patient.setId(Integer.parseInt(parts[0]));
@@ -209,6 +222,7 @@ public class ConnectionDoctor {
                 patient.setGender(Gender.valueOf(parts[5].toUpperCase()));
                 patient.setPhoneNumber(Integer.parseInt(parts[6])); // Convertir a entero
                 patient.setDob(LocalDate.parse(parts[7], DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                patient.setPreviousDiseases(previousDiseases);
 
                 return patient;
             } else {
@@ -230,7 +244,6 @@ public class ConnectionDoctor {
         try {
             // Conectar al servidor
             // connectToServer();
-            System.out.println("CONECTED TO THE SERVER");
             printWriter.println("VIEW_EPISODES_DOCTOR");
             printWriter.println(patientDni); // Enviar el DNI del paciente
 
@@ -273,12 +286,12 @@ public class ConnectionDoctor {
             // connectToServer();
 
             printWriter.println("VIEW_EPISODE_ALL_DETAILS");
-            System.out.println("SENT TO SERVER: VIEW_EPISODE_ALL_DETAILS");
+           // System.out.println("SENT TO SERVER: VIEW_EPISODE_ALL_DETAILS");
             printWriter.println(String.valueOf(episode_id));
-            System.out.println("SENT TO SERVER: " + episode_id);
+           // System.out.println("SENT TO SERVER: " + episode_id);
 
             printWriter.println(String.valueOf(patient_Id));
-            System.out.println("SENT TO SERVER: " + patient_Id);
+           // System.out.println("SENT TO SERVER: " + patient_Id);
 
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
@@ -306,26 +319,26 @@ public class ConnectionDoctor {
                             break;
 
                         case "RECORDINGS": // change -> add data 
-                            System.out.println("In recordings connect DOCTOR");
+                           // System.out.println("In recordings connect DOCTOR");
 
                             if (parts.length >= 3) {
                                 try {
                                     // Parsear ID
                                     int id = Integer.parseInt(parts[1]);
-                                    System.out.println("recording id " + id);
+                                   // System.out.println("recording id " + id);
                                     // Leer y asignar la ruta del archivo
                                     String signalPath = parts[2];
-                                    System.out.println("recording path " + signalPath);
+                                    //System.out.println("recording path " + signalPath);
                                     // Extraer y procesar el array de datos
                                     String rawData = parts[3]; // Datos encapsulados en [ ]
-                                    System.out.println(" rawData sin subString: " + rawData);
+                                   // System.out.println(" rawData sin subString: " + rawData);
 
                                     rawData = rawData.substring(1, rawData.length() - 1); // Eliminar los corchetes [ ]
-                                    System.out.println(" rawData: " + rawData);
+                                   // System.out.println(" rawData: " + rawData);
 
                                     String[] dataParts = rawData.split(","); // Separar datos por comas
                                     ArrayList<Integer> data = new ArrayList<>();
-                                    System.out.println("data: " + data);
+                                  //  System.out.println("data: " + data);
                                     for (String dataPart : dataParts) {
                                         try {
                                             data.add(Integer.parseInt(dataPart));
@@ -340,7 +353,7 @@ public class ConnectionDoctor {
                                     recording.setSignal_path(signalPath);
                                     recording.setData(data);
                                     episode.getRecordings().add(recording);
-                                    System.out.println(recording);
+                                 //   System.out.println(recording);
 
                                 } catch (NumberFormatException e) {
                                     System.err.println("Invalid ID format in RECORDINGS: " + parts[1]);
@@ -416,9 +429,9 @@ public class ConnectionDoctor {
 
     public static boolean updateEpisode(Episode episode, List<String> diseases, List<String> surgeries) {
         try {
-            printWriter.println("INSERT_EPISODE"); 
+            printWriter.println("INSERT_EPISODE");
             printWriter.println("UPDATE_EPISODE");
-            int episodeId = episode.getId();                 
+            int episodeId = episode.getId();
             printWriter.println(episodeId);
 
             for (String disease : diseases) {
