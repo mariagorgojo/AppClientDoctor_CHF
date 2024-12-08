@@ -1,6 +1,5 @@
 package Executable;
 
-import java.util.Scanner;
 import Utilities.Utilities;
 import Utilities.Encryption;
 import pojos.Doctor;
@@ -17,7 +16,6 @@ import pojos.Recording.Type;
 
 public class DoctorMenu {
 
-    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         String ip_address_valid = null;
