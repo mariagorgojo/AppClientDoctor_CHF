@@ -71,7 +71,7 @@ public class DoctorMenu {
         //do {
         // Solicita el DNI y valida el formato
         do {
-            System.out.println("\nEnter DNI: ");
+            System.out.println("\nEnter DNI to log in: ");
             dni = Utilities.readString();
             dni = dni.toUpperCase();
 
@@ -82,7 +82,7 @@ public class DoctorMenu {
 
         // Solicita la contraseña
         System.out.println("Enter password: ");
-         password= Utilities.readString();
+        password = Utilities.readString();
         String encryptedPassword = Encryption.encryptPasswordMD5(password);
 
         try {
@@ -133,7 +133,6 @@ public class DoctorMenu {
 
         System.out.println("Phone: ");
         Integer telephone = Utilities.readInteger();
-       
 
         String email;
         do {
@@ -246,7 +245,7 @@ public class DoctorMenu {
             }
         }
         selectedEpisode.setPatient_id(patient.getId());
-        System.out.println("Episode selected:" + selectedEpisode);
+
         // Consultar detalles del episodio
         Episode episodeDetails = ConnectionDoctor.viewPatientEpisode(selectedEpisode.getId(), patient.getId());
         if (episodeDetails != null) {
@@ -261,15 +260,15 @@ public class DoctorMenu {
                 System.out.println("Surgeries: " + surgeries);
                 System.out.println("Symptoms: " + symptoms);
                 System.out.println("Diseases: " + diseases);
-                System.out.println("Recordings: " + recordings);
+                //  System.out.println("Recordings: " + recordings);
 
                 if (!recordings.isEmpty()) {
-                    System.out.println("\nSelect an id to see a specific recording:\n");
+                    System.out.println("\nSelect an id to see a specific RECORDING:\n");
                     for (Recording rec : recordings) {
                         System.out.println("ID: " + rec.getId() + ", Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
                     }
 
-                    System.out.print("Introduce el ID del recording: ");
+                    System.out.print("Introduce el ID del recording. ");
                     int idBuscado = Utilities.readInteger();
                     // Buscar el recording con ese id.-> metodo en recording
                     Recording foundRecording = null;
@@ -279,9 +278,7 @@ public class DoctorMenu {
                             break; // Salir del bucle una vez que se encuentra el recording.
                         }
                     }
-                    System.out.println("foundRecording: " + foundRecording);
                     ArrayList<Integer> data = foundRecording.getData();
-                    System.out.println("dt: " + data);
                     // Si se encuentra el recording, mostrar los detalles.
                     if (foundRecording != null) {
 
@@ -366,7 +363,7 @@ public class DoctorMenu {
             System.out.println("\n\n");
             System.out.println((availableDiseases.size() + 1) + ". Add new Disease");
             System.out.println("\n\n");
-            System.out.println((availableDiseases.size() + 2) + ". Skip to next step ");
+            System.out.println((availableDiseases.size() + 2) + ". Skip to next step -> Patient needs Surgery ");
 
             option = Utilities.readInteger();
 
@@ -405,7 +402,7 @@ public class DoctorMenu {
             System.out.println("\n\n");
             System.out.println((availableSurgeries.size() + 1) + ". Add new Surgery");
             System.out.println("\n\n");
-            System.out.println((availableSurgeries.size() + 2) + ". Skip to next step");
+            System.out.println((availableSurgeries.size() + 2) + ". Go back to the Doctor Menu");
 
             option = Utilities.readInteger();
 
