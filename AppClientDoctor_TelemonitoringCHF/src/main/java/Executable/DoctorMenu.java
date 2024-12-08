@@ -5,13 +5,15 @@ import Utilities.Utilities;
 import Utilities.Encryption;
 import pojos.Doctor;
 import ConnectionDoctor.*;
-import Swing.ReconstructionSignal;
+import Swing.ECGSignalReconstruction;
+import Swing.EMGSignalReconstruction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pojos.*;
+import pojos.Recording.Type;
 
 public class DoctorMenu {
 
@@ -283,7 +285,14 @@ public class DoctorMenu {
                     System.out.println("dt: " + data);
                     // Si se encuentra el recording, mostrar los detalles.
                     if (foundRecording != null) {
-                        ReconstructionSignal.reconstructSignal(data);
+
+                        Type signal_type = foundRecording.getType();
+                        if (signal_type == Type.ECG) {
+                            ECGSignalReconstruction.reconstructSignal(data);
+                        } else {
+                            EMGSignalReconstruction.reconstructSignal(data);
+                        }
+
                     } else {
                         System.out.println("No se encontró un recording con ese ID.");
                     }
