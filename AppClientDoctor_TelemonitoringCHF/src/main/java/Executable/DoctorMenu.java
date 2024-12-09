@@ -16,7 +16,6 @@ import pojos.Recording.Type;
 
 public class DoctorMenu {
 
-
     public static void main(String[] args) {
         String ip_address_valid = null;
         try {
