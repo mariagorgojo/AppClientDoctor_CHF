@@ -287,7 +287,7 @@ public class DoctorMenu {
                         }
 
                     } else {
-                        System.out.println("No se encontró un recording con ese ID.");
+                        System.out.println("We couldn't find any recording with that given ID.");
                     }
                 }
                 boolean res = true;
@@ -314,7 +314,9 @@ public class DoctorMenu {
     private static void insertEpisodeFeedback(Episode selectedEpisode) {
         List<String> diseases = selectDiseases();
         List<String> surgeries = selectSurgeries();
-
+         if(diseases.isEmpty() && surgeries.isEmpty()){
+             System.out.println("The medical episode was not updated");
+         } else{
         boolean success = ConnectionDoctor.updateEpisode(selectedEpisode, diseases, surgeries);
         if (success) {
             System.out.println("Episode inserted successfully!");
@@ -322,6 +324,7 @@ public class DoctorMenu {
         } else {
             System.err.println("Failed to insert episode. Please try again.");
         }
+         }
 
     }
 
@@ -357,9 +360,9 @@ public class DoctorMenu {
             for (int i = 0; i < availableDiseases.size(); i++) {
                 System.out.println((i + 1) + ". " + availableDiseases.get(i).getDisease());
             }
-            System.out.println("\n\n");
+            System.out.println("");
             System.out.println((availableDiseases.size() + 1) + ". Add new Disease");
-            System.out.println("\n\n");
+            System.out.println("");
             System.out.println((availableDiseases.size() + 2) + ". Skip to next step -> Patient needs Surgery ");
 
             option = Utilities.readInteger();
@@ -396,10 +399,10 @@ public class DoctorMenu {
             for (int i = 0; i < availableSurgeries.size(); i++) {
                 System.out.println((i + 1) + ". " + availableSurgeries.get(i).getSurgery());
             }
-            System.out.println("\n\n");
+            System.out.println("");
             System.out.println((availableSurgeries.size() + 1) + ". Add new Surgery");
-            System.out.println("\n\n");
-            System.out.println((availableSurgeries.size() + 2) + ". Go back to the Doctor Menu");
+            System.out.println("");
+            System.out.println((availableSurgeries.size() + 2) + ". Finish giving feedback");
 
             option = Utilities.readInteger();
 
