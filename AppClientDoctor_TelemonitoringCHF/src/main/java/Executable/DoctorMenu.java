@@ -262,7 +262,7 @@ public class DoctorMenu {
                 if (!recordings.isEmpty()) {
                     System.out.println("\nSelect an id to see a specific RECORDING:\n");
                     for (Recording rec : recordings) {
-                        System.out.println("ID: " + rec.getId() + ", Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
+                        System.out.println("ID: " + rec.getId() + "Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
                     }
 
                     System.out.print("Introduce el ID del recording. ");

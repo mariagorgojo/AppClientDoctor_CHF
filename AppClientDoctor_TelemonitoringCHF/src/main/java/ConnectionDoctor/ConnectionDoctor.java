@@ -22,6 +22,7 @@ import pojos.Episode;
 import pojos.Patient;
 import pojos.Patient.Gender;
 import pojos.Recording;
+import pojos.Recording.Type;
 import pojos.Surgery;
 import pojos.Symptom;
 
@@ -300,10 +301,11 @@ public class ConnectionDoctor {
                                     int id = Integer.parseInt(parts[1]);
                                    // System.out.println("recording id " + id);
                                     // Leer y asignar la ruta del archivo
-                                    String signalPath = parts[2];
+                                    Type type =  Type.valueOf(parts[2]); // Devuelve Type.ECG
+                                    String signalPath = parts[3];
                                     //System.out.println("recording path " + signalPath);
                                     // Extraer y procesar el array de datos
-                                    String rawData = parts[3]; // Datos encapsulados en [ ]
+                                    String rawData = parts[4]; // Datos encapsulados en [ ]
                                    // System.out.println(" rawData sin subString: " + rawData);
 
                                     rawData = rawData.substring(1, rawData.length() - 1); // Eliminar los corchetes [ ]
@@ -323,6 +325,7 @@ public class ConnectionDoctor {
                                     // Crear y agregar la grabación al episodio
                                     Recording recording = new Recording();
                                     recording.setId(id);
+                                    recording.setType(type);
                                     recording.setSignal_path(signalPath);
                                     recording.setData(data);
                                     episode.getRecordings().add(recording);
