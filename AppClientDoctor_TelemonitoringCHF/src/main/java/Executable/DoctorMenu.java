@@ -7,6 +7,8 @@ import ConnectionDoctor.*;
 import Swing.ECGSignalReconstruction;
 import Swing.EMGSignalReconstruction;
 import java.io.IOException;
+import java.net.BindException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,19 +18,32 @@ import pojos.Recording.Type;
 
 public class DoctorMenu {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
         String ip_address_valid = null;
-        try {
 
+        try {
+            System.out.println("\nPlease enter a valid IP address: ");
             ip_address_valid = Utilities.getValidIPAddress();
             try {
                 ConnectionDoctor.connectToServer(ip_address_valid);
+            } catch (ConnectException ce) {
+                System.out.println("We're sorry, the system is currently unavailable. Please try again later.");
+                System.out.println("Connection refused: The server might be unavailable or the IP address is incorrect. Please try again.");
+                //Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, "Connection refused", ce);
+                System.exit(0);
+            } catch (BindException be) {
+                System.out.println("We're sorry, the system is currently unavailable. Please try again later.");
+                System.out.println("Port already in use: Please ensure no other application is using the required port.");
+                //Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, "Port already in use", be);
+                System.exit(0);
+
             } catch (IOException ex) {
-                Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("We're sorry, the system is currently unavailable. Please try again later.");
+                Logger.getLogger(DoctorMenu.class.getName()).log(Level.SEVERE, "IO Exception", ex);
             }
             mainMenu();
         } finally {
-            ConnectionDoctor.closeConnection(); // Cierra la conexión al finalizar
+            ConnectionDoctor.closeConnection(); // Close the connection at the end
         }
     }
 
@@ -262,7 +277,7 @@ public class DoctorMenu {
                 if (!recordings.isEmpty()) {
                     System.out.println("\nSelect an id to see a specific RECORDING:\n");
                     for (Recording rec : recordings) {
-                        System.out.println("ID: " + rec.getId() + "Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
+                        System.out.println("ID: " + rec.getId() + " Path: " + rec.getSignal_path()); // Usa `filepath` si ya corregiste el atributo.
                     }
 
                     System.out.print("Introduce el ID del recording. ");
