@@ -152,7 +152,6 @@ public class Utilities {
         String ipAddress;
 
         while (true) {
-            System.out.println("\nPlease, introduce a valid IP address: ");
             ipAddress = scanner.nextLine();
 
             if (valid_ipAddress(ipAddress)) {
