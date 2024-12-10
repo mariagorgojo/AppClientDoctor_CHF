@@ -343,7 +343,7 @@ public class DoctorMenu {
                 return;
             } else {
                 Recording selectedRecording = recordings.get(choice - 1);
-                //  System.out.println("\nSelected recording: " + selectedRecording.getDetails()); // como se ve la señal
+
             }
         }
     }

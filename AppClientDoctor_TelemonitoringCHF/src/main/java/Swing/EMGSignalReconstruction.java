@@ -96,7 +96,7 @@ public class EMGSignalReconstruction {
         ArrayList<Integer> emgData = new ArrayList<>();
 
         if (emgData.isEmpty()) {
-            System.out.println("Por favor, proporciona datos de EMG en el array.");
+            System.out.println("Please, introduce the EMG data in the array.");
         } else {
             reconstructSignal(emgData);
         }

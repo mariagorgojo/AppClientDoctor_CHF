@@ -152,14 +152,14 @@ public class Utilities {
         String ipAddress;
 
         while (true) {
-            System.out.println("\nPor favor, introduce una dirección IP válida: ");
+            System.out.println("\nPlease, introduce a valid IP address: ");
             ipAddress = scanner.nextLine();
 
             if (valid_ipAddress(ipAddress)) {
-                System.out.println("\nDirección IP válida: " + ipAddress);
+                System.out.println("\nValid IP address: " + ipAddress);
                 break;
             } else {
-                System.out.println("La dirección IP no es válida o no responde. Inténtalo de nuevo.");
+                System.out.println("IP addres is not valid or working. Try again.");
             }
         }
 

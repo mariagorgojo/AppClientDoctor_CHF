@@ -110,10 +110,6 @@ public class ConnectionDoctor {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
-        /*finally {
-            //printWriter.println("STOP"); // TO DO VER SI QUITARLO O NO 
-            closeConnection();
-        }*/
     }
 
     public static Doctor viewDoctorDetails(String doctorDni) {
@@ -142,9 +138,7 @@ public class ConnectionDoctor {
             }
         } catch (IOException e) {
             Logger.getLogger(ConnectionDoctor.class.getName()).log(Level.SEVERE, null, e);
-            /*} finally {
-            // printWriter.println("STOP");
-            closeConnection(); // correct?*/
+            
         }
         return null;
     }
@@ -153,18 +147,15 @@ public class ConnectionDoctor {
 
         List<Patient> patients = new ArrayList<>();
         try {
-            //connectToServer();
 
             printWriter.println("VIEW_DOCTOR_PATIENTS");
             printWriter.println(doctorDni);
             String firstLine = bufferedReader.readLine();
-            // System.out.println(firstLine);
             if (!"EMPTY".equals(firstLine)) {
 
                 String patientString = firstLine.trim();
                 while (!(patientString.equals("END_OF_LIST"))) {
                     String[] parts = patientString.split(";");
-                    //System.out.println("Reading patients");
                     if (parts.length == 3) { // Asegurar formato correcto
 
                         Patient patient = new Patient();
@@ -172,7 +163,6 @@ public class ConnectionDoctor {
                         patient.setName(parts[1]);
                         patient.setSurname(parts[2]);
                         patients.add(patient);
-                        //  System.out.println(patient);
                     } else {
                         System.out.println("Malformed line: " + patientString); // Debug de errores
                     }
@@ -181,9 +171,7 @@ public class ConnectionDoctor {
             }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-            /*} finally {
-            closeConnection(); // Cerrar la conexión al servidor
-             */ }
+           }
         return patients; // Retornar la lista de pacientes
 
     }
@@ -193,8 +181,7 @@ public class ConnectionDoctor {
         ArrayList<Disease> previousDiseases = new ArrayList<>();
 
         try {
-            // connectToServer();
-            // System.out.println("conecta con el server");
+            
             printWriter.println("VIEW_PATIENT_INFORMATION");
             printWriter.println(dni);
 
@@ -231,9 +218,7 @@ public class ConnectionDoctor {
             }
         } catch (IOException e) {
             Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, e);
-            /*} finally {
-            closeConnection(); // Cerrar la conexión al servidor
-             */
+           
         }
         return patient;
     }
@@ -243,20 +228,17 @@ public class ConnectionDoctor {
 
         try {
             // Conectar al servidor
-            // connectToServer();
             printWriter.println("VIEW_EPISODES_DOCTOR");
             printWriter.println(patientDni); // Enviar el DNI del paciente
 
             // Leer la lista de episodios desde el servidor
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
-                // System.out.println("Data received from server: " + dataString);
 
                 String[] parts = dataString.split(";");
                 if (parts.length == 2) { // Validar que los datos contengan ID y Fecha
                     Episode episode = new Episode();
                     episode.setId(Integer.parseInt(parts[0])); // ID del episodio
-                    //episode.setDate(LocalDateTime.parse(parts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSS"))); // Fecha
                     episode.setDate(LocalDateTime.parse(parts[1], DateTimeFormatter.ISO_DATE_TIME));
 
                     episodes.add(episode);
@@ -270,11 +252,8 @@ public class ConnectionDoctor {
             // No se debería cerrar la conexión, cerrar SOLO al final de las operaciones
             // cerrar en el menu del paciente
         }
-        /*finally {
-            // Asegurar que la conexión al servidor se cierra
-            closeConnection();
-             
-        }*/
+        
+        
         return episodes;
     }
 
@@ -286,12 +265,8 @@ public class ConnectionDoctor {
             // connectToServer();
 
             printWriter.println("VIEW_EPISODE_ALL_DETAILS");
-           // System.out.println("SENT TO SERVER: VIEW_EPISODE_ALL_DETAILS");
             printWriter.println(String.valueOf(episode_id));
-           // System.out.println("SENT TO SERVER: " + episode_id);
-
             printWriter.println(String.valueOf(patient_Id));
-           // System.out.println("SENT TO SERVER: " + patient_Id);
 
             String dataString;
             while (!((dataString = bufferedReader.readLine()).equals("END_OF_LIST"))) {
@@ -319,7 +294,6 @@ public class ConnectionDoctor {
                             break;
 
                         case "RECORDINGS": // change -> add data 
-                           // System.out.println("In recordings connect DOCTOR");
 
                             if (parts.length >= 3) {
                                 try {
@@ -372,9 +346,7 @@ public class ConnectionDoctor {
 
         } catch (IOException e) {
             System.err.println("Error retrieving episode details: " + e.getMessage());
-            /* } finally {
-            closeConnection(); // Cerrar la conexión al servidor
-             */ }
+             }
         return episode;
     }
 
@@ -396,9 +368,7 @@ public class ConnectionDoctor {
         } catch (IOException e) {
             System.err.println("Error retrieving diseases: " + e.getMessage());
         }
-        /*finally {
-            closeConnection(); // Cerrar la conexión al servidor
-        }*/
+        
 
         return diseases;
     }
@@ -420,9 +390,7 @@ public class ConnectionDoctor {
         } catch (IOException e) {
             System.err.println("Error retrieving surgeries: " + e.getMessage());
         }
-        /*finally {
-            closeConnection(); // Cerrar la conexión al servidor
-        }*/
+        
 
         return surgeries;
     }
@@ -454,7 +422,6 @@ public class ConnectionDoctor {
     }
 }
 
-// no borrar
 /* public static void main(String[] args) throws IOException {
 
                 System.out.println("Starting Client...");
