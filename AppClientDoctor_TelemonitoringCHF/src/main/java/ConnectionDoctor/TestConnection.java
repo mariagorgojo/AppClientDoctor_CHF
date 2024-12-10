@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package ConnectionDoctor;
+/*package ConnectionDoctor;
 
 import java.io.IOException;
 import pojos.Doctor;
@@ -11,13 +11,13 @@ import pojos.Doctor;
  *
  * @author maria
  */
-public class TestConnection {
+/*public class TestConnection {
 
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
      */
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         ConnectionDoctor.connectToServer("localhost");
         System.out.println("Connected succesfully");
 
@@ -44,4 +44,4 @@ public class TestConnection {
         ConnectionDoctor.closeConnection();
 
     }
-}
+}*/

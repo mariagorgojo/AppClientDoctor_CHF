@@ -328,26 +328,6 @@ public class DoctorMenu {
 
     }
 
-    private static void viewRecordingsByEpisode(Episode episode) { // surgery, enfermedad, menus.drawio ... 
-        List<Recording> recordings = episode.getRecordings();
-
-        if (recordings.isEmpty()) {
-            System.out.println("\nNo recordings found for this episode.");
-            return;
-        }
-
-        while (true) {
-            int choice = Utilities.displayListWithMenu(recordings, "=== Recordings ===", "Go back");
-
-            if (choice == 0) {
-                return;
-            } else {
-                Recording selectedRecording = recordings.get(choice - 1);
-
-            }
-        }
-    }
-
     private static List<String> selectDiseases() {
 
         List<Disease> availableDiseases = ConnectionDoctor.getAvailableDiseases();
@@ -416,7 +396,7 @@ public class DoctorMenu {
                 }
             } else if (option == availableSurgeries.size() + 1) {
                 System.out.println("Enter new Surgery: ");
-                String newSurgery = Utilities.readString();;
+                String newSurgery = Utilities.readString();
                 selectedSurgeries.add(newSurgery);
                 System.out.println("Surgery \"" + newSurgery + "\" added.");
             } else if (option != availableSurgeries.size() + 2) {

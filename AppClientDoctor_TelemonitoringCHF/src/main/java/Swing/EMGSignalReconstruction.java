@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Swing;
-import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
