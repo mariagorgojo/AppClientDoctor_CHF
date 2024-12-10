@@ -295,7 +295,7 @@ public class ConnectionDoctor {
 
                         case "RECORDINGS": // change -> add data 
 
-                            if (parts.length >= 3) {
+                            if (parts.length >= 4) {
                                 try {
                                     // Parsear ID
                                     int id = Integer.parseInt(parts[1]);
