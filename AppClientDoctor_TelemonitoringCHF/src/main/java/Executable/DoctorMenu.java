@@ -52,7 +52,7 @@ public class DoctorMenu {
                 case 0:
                     ConnectionDoctor.closeConnection();
                     System.out.println("Exiting...");
-                    return;
+                    System.exit(0);
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
